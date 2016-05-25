@@ -9,7 +9,61 @@ class IndeedScrapy(scrapy.Spider):
     name = "naukri"
     allowed_domains=["naukri.com"]
     start_urls = [
-        "http://www.naukri.com/computer-operator-jobs-in-thane"
+        "http://www.naukri.com/office-boy-jobs-in-thane",
+        "http://www.naukri.com/office-administrator-jobs-in-thane",
+        "http://www.naukri.com/receptionist-jobs-in-thane",
+        "http://www.naukri.com/data-entry-jobs-in-thane",
+        "http://www.naukri.com/computer-operator-jobs-in-thane",
+        "http://www.naukri.com/data-operator-jobs-in-thane",
+        "http://www.naukri.com/field-executive-jobs-in-thane",
+        "http://www.naukri.com/data-collection-jobs-in-thane",
+        "http://www.naukri.com/marketing-executive-jobs-in-thane",
+        "http://www.naukri.com/delivery-jobs-in-thane",
+        "http://www.naukri.com/courier-jobs-in-thane",
+        "http://www.naukri.com/delivery-executive-jobs-in-thane",
+        "http://www.naukri.com/delivery-boy-jobs-in-thane",
+
+        "http://www.naukri.com/office-boy-jobs-in-navi-mumbai",
+        "http://www.naukri.com/office-administrator-jobs-in-navi-mumbai",
+        "http://www.naukri.com/receptionist-jobs-in-navi-mumbai",
+        "http://www.naukri.com/data-entry-jobs-in-navi-mumbai",
+        "http://www.naukri.com/computer-operator-jobs-in-navi-mumbai",
+        "http://www.naukri.com/data-operator-jobs-in-navi-mumbai",
+        "http://www.naukri.com/field-executive-jobs-in-navi-mumbai",
+        "http://www.naukri.com/data-collection-jobs-in-navi-mumbai",
+        "http://www.naukri.com/marketing-executive-jobs-in-navi-mumbai",
+        "http://www.naukri.com/delivery-jobs-in-navi-mumbai",
+        "http://www.naukri.com/courier-jobs-in-navi-mumbai",
+        "http://www.naukri.com/delivery-executive-jobs-in-navi-mumbai",
+        "http://www.naukri.com/delivery-boy-jobs-in-navi-mumbai",
+
+        "http://www.naukri.com/office-boy-jobs-in-mumbai",
+        "http://www.naukri.com/office-administrator-jobs-in-mumbai",
+        "http://www.naukri.com/receptionist-jobs-in-mumbai",
+        "http://www.naukri.com/data-entry-jobs-in-mumbai",
+        "http://www.naukri.com/computer-operator-jobs-in-mumbai",
+        "http://www.naukri.com/data-operator-jobs-in-mumbai",
+        "http://www.naukri.com/field-executive-jobs-in-mumbai",
+        "http://www.naukri.com/data-collection-jobs-in-mumbai",
+        "http://www.naukri.com/marketing-executive-jobs-in-mumbai",
+        "http://www.naukri.com/delivery-jobs-in-mumbai",
+        "http://www.naukri.com/courier-jobs-in-mumbai",
+        "http://www.naukri.com/delivery-executive-jobs-in-mumbai",
+        "http://www.naukri.com/delivery-boy-jobs-in-mumbai",
+
+        "http://www.naukri.com/office-boy-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/office-administrator-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/receptionist-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/data-entry-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/computer-operator-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/data-operator-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/field-executive-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/data-collection-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/marketing-executive-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/delivery-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/courier-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/delivery-executive-jobs-in-mumbai-suburbs",
+        "http://www.naukri.com/delivery-boy-jobs-in-mumbai-suburbs",
     ]
 
     def parse(self, response):
@@ -87,7 +141,7 @@ class IndeedScrapy(scrapy.Spider):
             if 'email address' in contact.keys() and 'src' in contact['email address'].keys():
                 contact['email address'].pop('src', 'no src found')
 
-            job['contact_dump'] = json.dump(contact)
+            job['contact_dump'] = json.dumps(contact)
             job['telephone'] = self._fetch(contact, 'telephone')
             job['email_id'] = self._fetch(contact, 'email address', 'title')
             job['recruiter_name'] = self._fetch(contact, 'recruiter name')
@@ -104,7 +158,7 @@ class IndeedScrapy(scrapy.Spider):
         #     job['website'] = 'NA'
         #     job['address'] = 'NA'
 
-        job['posted_date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)').extract_first()
+        job['posted_date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)')
 
         yield job
 
