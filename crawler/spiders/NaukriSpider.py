@@ -45,6 +45,8 @@ class IndeedScrapy(scrapy.Spider):
         jid = url[index+1:]
 
         if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]').extract_first() is None:
+            # todo: add logic to handle error pages
+
             # could not parse this page. add to error item
             # error = ErrorItem()
             # error['url'] = response.meta['url']
@@ -52,8 +54,7 @@ class IndeedScrapy(scrapy.Spider):
             return
 
 
-        # job = JobItem()
-        job = {}
+        job = JobItem()
         job_posting = response.xpath('//div[@itemtype="http://schema.org/JobPosting"]')[0]
         job['url'] = response.meta['url']
         job['title'] = self._join(job_posting.xpath('//h1[@itemprop="title"]/text()').extract())
@@ -75,7 +76,6 @@ class IndeedScrapy(scrapy.Spider):
                 job['role'] += ', ' + self._join(role.xpath('text()').extract(), delimeter=', ')
         
         # parsing for contact details
-        # contact = job_posting('//div[@id="viewContact"]')
         contact_url = 'http://www.naukri.com/jd/contactDetails?file=' + str(jid)
         r = requests.get(contact_url)
         if r.status_code == 200:
@@ -85,8 +85,6 @@ class IndeedScrapy(scrapy.Spider):
 
         job['posted_date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)')
 
-        # pp = pprint.PrettyPrinter(indent=4)
-        # pp.pprint(job)
         yield job
 
     def _rstrip(self, l):

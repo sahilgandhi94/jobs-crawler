@@ -8,7 +8,16 @@
 import scrapy
 
 
-class CrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+class JobItem(scrapy.Item):
+    url = scrapy.Field()
+    title = scrapy.Field()
+    company_name = scrapy.Field()
+    experience_requirements = scrapy.Field()
+    location = scrapy.Field()
+    description = scrapy.Field()
+    salary = scrapy.Field()
+    industry = scrapy.Field()
+    role = scrapy.Field()
+    contact = scrapy.Field()
+    posted_date = scrapy.Field()
     pass
