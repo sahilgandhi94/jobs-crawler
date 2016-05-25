@@ -18,8 +18,8 @@ class JobPostProcessingPipeline(object):
             # ex str: '2 - 5 yrs', '4 - 7 yrs'
             _temp = item['experience_requirements']
             try:
-                if int(_temp[0:_temp.find('-')].strip()) > 2:
-                    raise DropItem("Dropping item because exp req > 2 :"  + item['experience_requirements'])
+                if int(_temp[0:_temp.find('-')].strip()) > 1:
+                    raise DropItem("Dropping item because exp req > 1 :"  + item['experience_requirements'])
                     _pass = False
             except DropItem as e:
                 raise e

@@ -81,11 +81,30 @@ class IndeedScrapy(scrapy.Spider):
         contact_url = 'http://www.naukri.com/jd/contactDetails?file=' + str(jid)
         r = requests.get(contact_url)
         if r.status_code == 200:
-            job['contact'] = json.dumps(r.json()['fields'])
-        else:
-            job['contact'] = 'NA'
+            contact = r.json()['fields']
+            contact = {k.lower():v for k,v in contact.items()}  # convert all keys to lowercase
 
-        job['posted_date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)')
+            if 'email address' in contact.keys() and 'src' in contact['email address'].keys():
+                contact['email address'].pop('src', 'no src found')
+
+            job['contact_dump'] = json.dump(contact)
+            job['telephone'] = self._fetch(contact, 'telephone')
+            job['email_id'] = self._fetch(contact, 'email address', 'title')
+            job['recruiter_name'] = self._fetch(contact, 'recruiter name')
+            job['reference_id'] = self._fetch(contact, 'reference id')
+            job['website'] = self._fetch(contact, 'website')
+            job['address'] = self._fetch(contact, 'address')
+
+        # else:
+        #     job['contact_dump'] = 'NA'
+        #     job['telephone'] = 'NA'
+        #     job['email_id'] = 'NA'
+        #     job['recruiter_name'] = 'NA'
+        #     job['reference_id'] = 'NA'
+        #     job['website'] = 'NA'
+        #     job['address'] = 'NA'
+
+        job['posted_date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)').extract_first()
 
         yield job
 
@@ -94,5 +113,14 @@ class IndeedScrapy(scrapy.Spider):
 
     def _join(self, l, delimeter=' '):
         return delimeter.join(self._rstrip(l))  # to remove \r\n characters
+
+    def _fetch(self, data, key, subkey=None):
+        if key in data.keys():
+            if subkey is not None and subkey in data[key].keys():
+                return data[key][subkey]
+            else:
+                return data[key]
+        else:
+            return 'NA'
 
 
