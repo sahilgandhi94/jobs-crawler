@@ -3,11 +3,12 @@ import requests
 import json
 import pprint
 
+from crawler.items import JobItem
+
 class IndeedScrapy(scrapy.Spider):
     name = "naukri"
     allowed_domains=["naukri.com"]
     start_urls = [
-        # "http://www.naukri.com/bpo-jobs-in-navi-mumbai"
         "http://www.naukri.com/computer-operator-jobs-in-thane"
     ]
 
@@ -18,6 +19,7 @@ class IndeedScrapy(scrapy.Spider):
                 req = scrapy.Request(url, callback=self.parse_job_details)
                 req.meta['url'] = url
                 yield req
+
             if response.xpath('//div[@class="pagination"]/a/@href').extract_first() is not None:
                 next = response.xpath('//div[@class="pagination"]/a/@href').extract()
                 if len(next) > 1 :
