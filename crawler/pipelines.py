@@ -3,7 +3,14 @@ from scrapy.exceptions import DropItem
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import mimetypes
+import smtplib
+
 from datetime import datetime
+import json
+import os
 
 
 class JobPostProcessingPipeline(object):
@@ -53,7 +60,9 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        file = open('%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s')), 'w+b')
+        filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
+        path = os.path.expanduser("~/jobs-data/%s" % filename)
+        file = open(path, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
         self.exporter.start_exporting()
@@ -61,8 +70,27 @@ class CSVExportPipeline(object):
     def spider_closed(self, spider):
         self.exporter.finish_exporting()
         file = self.files.pop(spider)
+        filename = file.name
         file.close()
+        self._send_email(filename)
 
     def process_item(self, item, spider):
         self.exporter.export_item(item)
         return item
+
+    def _send_email(self, filename):
+        print('====sending email %s ====' % filename)
+        msg = MIMEMultipart('alternative')
+        msg['From'] = "admin@workindia.in"
+        msg['To'] = "sales-workindia@workindia.in"
+        msg['Subject'] = 'Portal scraping - %s' % datetime.utcnow().strftime('%d-%b-%Y')
+        # attach the csv file
+        file = open(filename)
+        attachment = MIMEText(file.read(), _subtype='csv')
+        file.close()
+        attachment.add_header('Content-Disposition', 'attachment', filename=filename.split('/')[-1].strip())
+        msg.attach(attachment)
+
+        s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        s.login("admin@workindia.in", "28092263")
+        s.sendmail("admin@workindia.in", "sahil.gandhi@workindia.in, moiz.arsiwala@workindia.in", msg.as_string())
