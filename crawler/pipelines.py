@@ -53,7 +53,7 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        file = open('%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y')), 'w+b')
+        file = open('%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s')), 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
         self.exporter.start_exporting()
