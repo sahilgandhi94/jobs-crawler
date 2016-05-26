@@ -1,7 +1,6 @@
 import scrapy
 import requests
 import json
-import pprint
 
 from crawler.items import JobItem
 
