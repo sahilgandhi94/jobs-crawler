@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from crawler.items import JobItem
 from scrapy.exceptions import DropItem
+from scrapy import signals
+from scrapy.exporters import CsvItemExporter
+
+from datetime import datetime
 
 
 class JobPostProcessingPipeline(object):
@@ -38,3 +40,29 @@ class JobPostProcessingPipeline(object):
 
     def _contains(self, str, key):
         return str.lower().find(key) > -1
+
+class CSVExportPipeline(object):
+    def __init__(self):
+        self.files = {}
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        pipeline = cls()
+        crawler.signals.connect(pipeline.spider_opened, signals.spider_opened)
+        crawler.signals.connect(pipeline.spider_closed, signals.spider_closed)
+        return pipeline
+
+    def spider_opened(self, spider):
+        file = open('%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y')), 'w+b')
+        self.files[spider] = file
+        self.exporter = CsvItemExporter(file)
+        self.exporter.start_exporting()
+
+    def spider_closed(self, spider):
+        self.exporter.finish_exporting()
+        file = self.files.pop(spider)
+        file.close()
+
+    def process_item(self, item, spider):
+        self.exporter.export_item(item)
+        return item
