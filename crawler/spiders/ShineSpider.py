@@ -26,40 +26,38 @@ class IndeedScrapy(scrapy.Spider):
     'http://www.shine.com/job-search/simple/delivery-executive/thane/',
     'http://www.shine.com/job-search/simple/delivery-boy/thane/',
 
-    # 'http://www.shine.com/job-search/simple/data-entry/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/office-boy/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/office-administrator/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/computer-operator/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/data-operator/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/field-executive/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/data-collection/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/marketing-executive/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/courier/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery-executive/navi-mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery-boy/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/data-entry/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/office-boy/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/office-administrator/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/computer-operator/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/data-operator/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/field-executive/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/data-collection/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/marketing-executive/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/delivery/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/courier/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/delivery-executive/navi-mumbai/',
+    'http://www.shine.com/job-search/simple/delivery-boy/navi-mumbai/',
 
-    # 'http://www.shine.com/job-search/simple/data-entry/mumbai/',
-    # 'http://www.shine.com/job-search/simple/office-boy/mumbai/',
-    # 'http://www.shine.com/job-search/simple/office-administrator/mumbai/',
-    # 'http://www.shine.com/job-search/simple/computer-operator/mumbai/',
-    # 'http://www.shine.com/job-search/simple/data-operator/mumbai/',
-    # 'http://www.shine.com/job-search/simple/field-executive/mumbai/',
-    # 'http://www.shine.com/job-search/simple/data-collection/mumbai/',
-    # 'http://www.shine.com/job-search/simple/marketing-executive/mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery/mumbai/',
-    # 'http://www.shine.com/job-search/simple/courier/mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery-executive/mumbai/',
-    # 'http://www.shine.com/job-search/simple/delivery-boy/mumbai/',
-
-
+    'http://www.shine.com/job-search/simple/data-entry/mumbai/',
+    'http://www.shine.com/job-search/simple/office-boy/mumbai/',
+    'http://www.shine.com/job-search/simple/office-administrator/mumbai/',
+    'http://www.shine.com/job-search/simple/computer-operator/mumbai/',
+    'http://www.shine.com/job-search/simple/data-operator/mumbai/',
+    'http://www.shine.com/job-search/simple/field-executive/mumbai/',
+    'http://www.shine.com/job-search/simple/data-collection/mumbai/',
+    'http://www.shine.com/job-search/simple/marketing-executive/mumbai/',
+    'http://www.shine.com/job-search/simple/delivery/mumbai/',
+    'http://www.shine.com/job-search/simple/courier/mumbai/',
+    'http://www.shine.com/job-search/simple/delivery-executive/mumbai/',
+    'http://www.shine.com/job-search/simple/delivery-boy/mumbai/',
     ]
 
     def parse(self, response):
         if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]').extract_first() is not None:
             count_string = re.findall(r'\d+',response.xpath('//div[@class="num_key"]/em/text()').extract_first())
             total_count =  int(count_string[0])
-            count_per_page = 1
+            count_per_page = 0
 
             for href in response.xpath('//div[@class="search_listingleft"]/a/@href'):
                 count_per_page = count_per_page + 1
@@ -70,28 +68,34 @@ class IndeedScrapy(scrapy.Spider):
                 posted_date = datetime.strptime(posted_date_list[2], '%d-%b-%Y').date()
                 today = datetime.now().date() 
                 if (today - posted_date) <= timedelta(1):
-                    print (today - posted_date)
                     req = scrapy.Request(url, callback=self.parse_job_details)
                     req.meta['url'] = url
                     yield req
 
+            nextUrl = ""
+            flag = False
             try:
-                if response.meta['total_items_iterated'] <= response.meta['total_count']:
-                    next = list(response.url)
-                    next[len(response.url)-2] = str(int(next[len(response.url)-2]) + 1)
-                    nextUrl = "".join(next)
+                if int(response.meta['total_items_iterated']) <= int(response.meta['total_count']):
+                    url = response.url
+                    page_count = re.findall(r'\d+',url)[0]
+                    page_count = int(page_count)
+                    next_page = str(page_count + 1)
+                    nextUrl = re.sub(r'\d+', next_page, url)
+                    flag = True
                     total_items_iterated = int(response.meta['total_items_iterated']) + count_per_page
-                else:
-                    return
             except:
                 #first page
+                flag = True
                 nextUrl = response.url + str(2) + "/"
                 total_items_iterated = count_per_page
             finally:
-                paginate_req = scrapy.Request(nextUrl, callback=self.parse)
-                paginate_req.meta['total_count'] = total_count
-                paginate_req.meta['total_items_iterated'] = total_items_iterated
-                yield paginate_req
+                if not flag:
+                    return
+                else:
+                    paginate_req = scrapy.Request(nextUrl, callback=self.parse)
+                    paginate_req.meta['total_count'] = total_count
+                    paginate_req.meta['total_items_iterated'] = total_items_iterated
+                    yield paginate_req
             
 
 
