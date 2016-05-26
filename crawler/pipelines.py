@@ -9,9 +9,14 @@ import mimetypes
 import smtplib
 
 from datetime import datetime
+import requests
 import json
 import os
 
+
+GOOGLE_PLACES_API_KEY="AIzaSyBu8-KRJdiU0D5xnu6xTnEZ0dg1SAh_OhM"
+GOOGLE_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/json"
 
 class JobPostProcessingPipeline(object):
     def process_item(self, item, spider):
@@ -43,6 +48,37 @@ class JobPostProcessingPipeline(object):
                 raise DropItem("Dropping item because comp name :" + item['company_name']) 
                 _pass = False
 
+            # fetch company data from google
+            # text search - https://maps.googleapis.com/maps/api/place/textsearch/json?query=peppermint%20communications%20mumbai&key=
+            # detail search - https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJDdjQVhbJ5zsRxM8KlfZaifk&key=
+
+            payload = {
+                'query': item['company_name']+' mumbai',
+                'key': GOOGLE_PLACES_API_KEY
+            }
+            textsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
+            if textsearch.status_code == 200 and textsearch.json()['status'] == 'OK':
+                data = textsearch.json()['results'][0]
+                try:
+                    item['google_address'] = data['formatted_address']
+                except KeyError:
+                    pass
+                item['place_id'] = data['place_id']
+
+                payload = {
+                    'placeid': item['place_id'],
+                    'key':GOOGLE_PLACES_API_KEY
+                }
+                detailsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
+                if detailsearch.status_code == 200 and detailsearch.json()['status'] == 'OK':
+                    data = detailsearch.json()['result']
+                    item['google_url'] = data['url']
+                    item['international_phone_number'] = data['international_phone_number']
+                    item['formatted_phone_number'] = data['formatted_phone_number']
+                    item['website'] = str(item['website']) + ", " + str(data['website'])
+                    item['latitude'] = data['geometry']['location']['lat']
+                    item['longitude'] = data['geometry']['location']['lng']
+
             if _pass: return item
 
     def _contains(self, str, key):
@@ -61,7 +97,7 @@ class CSVExportPipeline(object):
 
     def spider_opened(self, spider):
         filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
-        path = os.path.expanduser("~/jobs-data/%s" % filename)
+        path = os.path.expanduser("/opt/jobs-data/%s" % filename)
         file = open(path, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)

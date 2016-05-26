@@ -26,4 +26,13 @@ class JobItem(scrapy.Item):
     website = scrapy.Field()
     posted_date = scrapy.Field()
     contact_dump = scrapy.Field()
+
+    google_address = scrapy.Field()
+    place_id = scrapy.Field()
+    international_phone_number = scrapy.Field()
+    formatted_phone_number = scrapy.Field()
+    google_url = scrapy.Field()
+    website = scrapy.Field()
+    latitude = scrapy.Field()
+    longitude = scrapy.Field()
     pass
