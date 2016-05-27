@@ -67,11 +67,16 @@ class IndeedScrapy(scrapy.Spider):
 
     def parse(self, response):
         if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]/a/@href').extract_first() is not None:
-            for href in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]/a/@href'):
-                url = response.urljoin(href.extract())
-                req = scrapy.Request(url, callback=self.parse_job_details)
-                req.meta['url'] = url
-                yield req
+
+            for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
+                href = each.xpath('a/@href').extract_first()
+                posted_date_string = each.xpath('div[@class="other_details"]/div[@class="rec_details"]/span[@class="date"]/text()').extract_first()
+                url = response.urljoin(href)
+
+                if posted_date_string == "1 day ago" or posted_date_string == "2 days ago":
+                    req = scrapy.Request(url, callback=self.parse_job_details)
+                    req.meta['url'] = url
+                    yield req
 
             if response.xpath('//div[@class="pagination"]/a/@href').extract_first() is not None:
                 next = response.xpath('//div[@class="pagination"]/a/@href').extract()

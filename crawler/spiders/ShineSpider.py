@@ -59,12 +59,13 @@ class IndeedScrapy(scrapy.Spider):
             total_count =  int(count_string[0])
             count_per_page = 0
 
-            for href in response.xpath('//div[@class="search_listingleft"]/a/@href'):
+            for each in response.xpath('//div[@class="search_listing"]'):
+                href = each.xpath('div[@class="search_listingleft"]/a/@href')
                 count_per_page = count_per_page + 1
-                url = response.urljoin(href.extract())
-                
-                posted_date_string = self._join(response.xpath('//div[@class="share_links"]/text()').extract()) 
-                posted_date_list = posted_date_string.split();
+                posted_date_string = each.xpath('div[@class="apply"]/div[@class="share_links"]/text()').extract_first()
+                url = response.urljoin(href.extract_first())
+                           
+                posted_date_list = posted_date_string.split()
                 posted_date = datetime.strptime(posted_date_list[2], '%d-%b-%Y').date()
                 today = datetime.now().date() 
                 if (today - posted_date) <= timedelta(1):
