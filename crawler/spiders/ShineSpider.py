@@ -8,7 +8,7 @@ from datetime import timedelta
 
 from crawler.items import JobItem
 
-class IndeedScrapy(scrapy.Spider):
+class ShineScrapy(scrapy.Spider):
     name = "shine"
     allowed_domains=["shine.com"]
     start_urls = [ 
