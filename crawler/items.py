@@ -35,4 +35,3 @@ class JobItem(scrapy.Item):
     website = scrapy.Field()
     latitude = scrapy.Field()
     longitude = scrapy.Field()
-    pass

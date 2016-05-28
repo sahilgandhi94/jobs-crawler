@@ -48,41 +48,65 @@ class JobPostProcessingPipeline(object):
                 raise DropItem("Dropping item because comp name :" + item['company_name']) 
                 _pass = False
 
-            # fetch company data from google
-            # text search - https://maps.googleapis.com/maps/api/place/textsearch/json?query=peppermint%20communications%20mumbai&key=
-            # detail search - https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJDdjQVhbJ5zsRxM8KlfZaifk&key=
+            if _pass: return item
 
+    def _contains(self, str, key):
+        return str.lower().find(key) > -1
+
+class FetchGoogleDataPipeline(object):
+    def process_item(self, item, spider):
+        # fetch company data from google
+        # text search - https://maps.googleapis.com/maps/api/place/textsearch/json?query=peppermint%20communications%20mumbai&key=
+        # detail search - https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJDdjQVhbJ5zsRxM8KlfZaifk&key=
+        if isinstance(item, JobItem):
+            print('==== fetch data from google ====')
             payload = {
                 'query': item['company_name']+' mumbai',
                 'key': GOOGLE_PLACES_API_KEY
             }
+
             textsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
             if textsearch.status_code == 200 and textsearch.json()['status'] == 'OK':
                 data = textsearch.json()['results'][0]
-                try:
-                    item['google_address'] = data['formatted_address']
-                except KeyError:
-                    pass
                 item['place_id'] = data['place_id']
 
                 payload = {
                     'placeid': item['place_id'],
                     'key':GOOGLE_PLACES_API_KEY
                 }
-                detailsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
+                detailsearch = requests.get(GOOGLE_DETAIL_SEARCH_URL, params=payload)
                 if detailsearch.status_code == 200 and detailsearch.json()['status'] == 'OK':
+                    print('=== getting google detail data ===')
                     data = detailsearch.json()['result']
-                    item['google_url'] = data['url']
-                    item['international_phone_number'] = data['international_phone_number']
-                    item['formatted_phone_number'] = data['formatted_phone_number']
-                    item['website'] = str(item['website']) + ", " + str(data['website'])
-                    item['latitude'] = data['geometry']['location']['lat']
-                    item['longitude'] = data['geometry']['location']['lng']
-
-            if _pass: return item
-
-    def _contains(self, str, key):
-        return str.lower().find(key) > -1
+                    try:
+                        item['google_url'] = data['url']
+                    except KeyError:
+                        pass
+                    try:
+                        item['google_address'] = data['formatted_address']
+                    except KeyError:
+                        pass
+                    try:
+                        item['international_phone_number'] = data['international_phone_number']
+                    except KeyError:
+                        pass
+                    try:
+                        item['formatted_phone_number'] = data['formatted_phone_number']
+                    except KeyError:
+                        pass
+                    try:
+                        item['website'] = str(item['website']) + ", " + str(data['website'])
+                    except KeyError:
+                        pass
+                    try:
+                        item['latitude'] = data['geometry']['location']['lat']
+                    except KeyError:
+                        pass
+                    try:
+                        item['longitude'] = data['geometry']['location']['lng']
+                    except KeyError:
+                        pass
+        return item
 
 class CSVExportPipeline(object):
     def __init__(self):
@@ -97,7 +121,7 @@ class CSVExportPipeline(object):
 
     def spider_opened(self, spider):
         filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
-        path = os.path.expanduser("/opt/jobs-data/%s" % filename)
+        path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         file = open(path, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
@@ -129,4 +153,4 @@ class CSVExportPipeline(object):
 
         s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         s.login("admin@workindia.in", "28092263")
-        s.sendmail("admin@workindia.in", "sahil.gandhi@workindia.in, moiz.arsiwala@workindia.in", msg.as_string())
+        s.sendmail("admin@workindia.in", "[sales-workindia@workindia.in, sahil.gandhi@workindia.in, moiz.arsiwala@workindia.in]", msg.as_string())
