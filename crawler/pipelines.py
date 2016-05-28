@@ -153,4 +153,4 @@ class CSVExportPipeline(object):
 
         s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         s.login("admin@workindia.in", "28092263")
-        s.sendmail("admin@workindia.in", "[sales-workindia@workindia.in, sahil.gandhi@workindia.in, moiz.arsiwala@workindia.in]", msg.as_string())
+        s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in, sahil.gandhi@workindia.in, moiz.arsiwala@workindia.in"], msg.as_string())
