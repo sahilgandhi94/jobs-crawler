@@ -13,31 +13,31 @@ class IndeedScrapy(scrapy.Spider):
     allowed_domains=["indeed.co.in"]
     custom_settings = {ROBOTSTXT_OBEY = False}  # because indeed.co.in/robots.txt has unicode characters and throws encoding error
     start_urls = [
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=back+office&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Thane&start=0'
-        'http://www.indeed.co.in/jobs?q=field+work&l=Thane&start=0'
+        'http://www.indeed.co.in/jobs?q=office+boy&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=office+administrative&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=back+office&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=data+entry&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=computer+operator&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=data+operator&l=Thane&start=0',
+        'http://www.indeed.co.in/jobs?q=field+work&l=Thane&start=0',
 
 
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=back+office&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=field+work&l=Mumbai&start=0'
+        'http://www.indeed.co.in/jobs?q=office+boy&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=office+administrative&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=back+office&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=data+entry&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=computer+operator&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=data+operator&l=Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=field+work&l=Mumbai&start=0',
 
 
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Navi+Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Navi+Mumbai&start=0'    
-        'http://www.indeed.co.in/jobs?q=back+office&l=Navi+Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Navi+Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Navi+Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Navi+Mumbai&start=0'
-        'http://www.indeed.co.in/jobs?q=field+work&l=Navi+Mumbai&start=0'
+        'http://www.indeed.co.in/jobs?q=office+boy&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=office+administrative&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=back+office&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=data+entry&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=computer+operator&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=data+operator&l=Navi+Mumbai&start=0',
+        'http://www.indeed.co.in/jobs?q=field+work&l=Navi+Mumbai&start=0',
     ]
 
 
