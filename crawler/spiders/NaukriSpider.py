@@ -73,7 +73,7 @@ class IndeedScrapy(scrapy.Spider):
                 posted_date_string = each.xpath('div[@class="other_details"]/div[@class="rec_details"]/span[@class="date"]/text()').extract_first()
                 url = response.urljoin(href)
 
-                if posted_date_string == "1 day ago" or posted_date_string == "2 days ago":
+                if posted_date_string == "1 day ago":
                     req = scrapy.Request(url, callback=self.parse_job_details)
                     req.meta['url'] = url
                     yield req
