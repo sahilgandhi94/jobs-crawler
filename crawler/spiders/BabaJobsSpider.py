@@ -47,14 +47,14 @@ class BabaJobsScrapy(scrapy.Spider):
                     req = scrapy.Request(url, callback=self.parse_job_details)
                     req.meta['url'] = url
                     req.meta['experience_requirements'] = experience_requirements
-                    req.meta['sponsored'] = True
+                    req.meta['premium'] = True
                     yield req
                 elif posted_date_list[1] == 'hours':
                     url = response.urljoin(href.extract_first())
                     req = scrapy.Request(url, callback=self.parse_job_details)
                     req.meta['url'] = url
                     req.meta['experience_requirements'] = experience_requirements
-                    req.meta['sponsored'] = False
+                    req.meta['premium'] = False
                     yield req
 
 
@@ -100,9 +100,9 @@ class BabaJobsScrapy(scrapy.Spider):
         job['description'] = response.xpath('//div[div[@class="col-sm-2 job-label-text"]/img[@alt="Description"]]/div[@class="col-sm-10 job-info-text"]/text()').extract_first()
         job['experience_requirements'] = response.meta['experience_requirements']
         try:
-            job['sponsored'] = response.meta['sponsored']
+            job['premium'] = response.meta['premium']
         except KeyError:
-            job['sponsored'] = 'NA'
+            job['premium'] = 'NA'
 
         job['contact_dump'] = 'NA'
         job['recruiter_name'] = 'NA'

@@ -26,7 +26,7 @@ class JobItem(scrapy.Item):
     website = scrapy.Field()
     posted_date = scrapy.Field()
     contact_dump = scrapy.Field()
-    sponsored = scrapy.Field()
+    premium = scrapy.Field()
 
     google_address = scrapy.Field()
     place_id = scrapy.Field()
