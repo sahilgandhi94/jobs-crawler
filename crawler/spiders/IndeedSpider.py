@@ -11,7 +11,6 @@ from crawler.items import JobItem
 class IndeedScrapy(scrapy.Spider):
     name = "indeed"
     allowed_domains=["indeed.co.in"]
-    custom_settings = {ROBOTSTXT_OBEY = False}  # because indeed.co.in/robots.txt has unicode characters and throws encoding error
     start_urls = [
         'http://www.indeed.co.in/jobs?q=office+boy&l=Thane&start=0',
         'http://www.indeed.co.in/jobs?q=office+administrative&l=Thane&start=0',
