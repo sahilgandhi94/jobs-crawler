@@ -42,20 +42,18 @@ class BabaJobsScrapy(scrapy.Spider):
                 posted_date_string = each.xpath('div/div/ul/li/p[@class="info-label-value is-recent"]/text()').extract_first()
                 posted_date_list = posted_date_string.split()
 
-                if 'sponsored' in  each.xpath('div/div/h4[@itemtype="http://schema.org/Organization"]//text()').extract_first().strip().lower():
-                    url = response.urljoin(href.extract_first())
-                    req = scrapy.Request(url, callback=self.parse_job_details)
-                    req.meta['url'] = url
-                    req.meta['experience_requirements'] = experience_requirements
+                if 'sponsored' in each.xpath('div/div/h4[@itemtype="http://schema.org/Organization"]//text()').extract_first().strip().lower():
                     req.meta['premium'] = True
-                    yield req
                 elif posted_date_list[1] == 'hours':
-                    url = response.urljoin(href.extract_first())
-                    req = scrapy.Request(url, callback=self.parse_job_details)
-                    req.meta['url'] = url
-                    req.meta['experience_requirements'] = experience_requirements
                     req.meta['premium'] = False
-                    yield req
+                else:
+                    continue
+
+                url = response.urljoin(href.extract_first())
+                req = scrapy.Request(url, callback=self.parse_job_details)
+                req.meta['url'] = url
+                req.meta['experience_requirements'] = experience_requirements
+                yield req
 
 
             nextUrl = ""
