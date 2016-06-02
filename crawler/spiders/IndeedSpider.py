@@ -64,11 +64,8 @@ class IndeedScrapy(scrapy.Spider):
 
 
     def parse_job_details(self, response):
-        print "ENTER"
-        url = response.meta['url'].split('?')[0]
-        
         job = JobItem()
-        job_content = response.xpath('//table[@id="job-content"]')[0]
+        # job_content = response.xpath('//table[@id="job-content"]').extract_first()
         job['url'] = response.meta['url']
         job['title'] = response.xpath('//div[@id="job_header"]/b/font/text()').extract_first()
         job['company_name'] = response.xpath('//div[@id="job_header"]/span[@class="company"]/text()').extract_first()
