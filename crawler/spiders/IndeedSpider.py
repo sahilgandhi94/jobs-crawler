@@ -44,12 +44,13 @@ class IndeedScrapy(scrapy.Spider):
         if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]').extract_first() is not None:
             
             for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
-                if each.xpath('div/div[@class="result-link-bar"]/span[@class="date"]/text()').extract_first() == '1 day ago':
-                    href = each.xpath('h2/a/@href')
-                    url = response.urljoin(href.extract_first())
-                    req = scrapy.Request(url, callback=self.parse_job_details)
-                    req.meta['url'] = url
-                    yield req
+                if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="date"]/text()').extract_first() == '1 day ago':
+                    if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="result-link-source"]/text()').extract_first() is None:
+                        href = "http://www.indeed.co.in" + each.xpath('h2/a/@href').extract_first()
+                        url = response.urljoin(href)
+                        req = scrapy.Request(url, callback=self.parse_job_details)
+                        req.meta['url'] = url
+                        yield req
 
           
             for x in response.xpath('//div[@class="pagination"]/a'):
@@ -65,7 +66,6 @@ class IndeedScrapy(scrapy.Spider):
 
     def parse_job_details(self, response):
         job = JobItem()
-        # job_content = response.xpath('//table[@id="job-content"]').extract_first()
         job['url'] = response.meta['url']
         job['title'] = response.xpath('//div[@id="job_header"]/b/font/text()').extract_first()
         job['company_name'] = response.xpath('//div[@id="job_header"]/span[@class="company"]/text()').extract_first()
