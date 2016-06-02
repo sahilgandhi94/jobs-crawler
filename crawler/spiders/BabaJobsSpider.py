@@ -39,15 +39,19 @@ class BabaJobsScrapy(scrapy.Spider):
                 href = each.xpath('div/div/h2[@class="s-card-title"]/a/@href')
                 experience_requirements = each.xpath('div/div/ul/li/text()').extract()[1]
                 count_per_page = count_per_page + 1
-                posted_date_string = each.xpath('div/div/ul/li/p[@class="info-label-value is-recent"]/text()').extract_first()
-                posted_date_list = posted_date_string.split()
 
                 if 'sponsored' in each.xpath('div/div/h4[@itemtype="http://schema.org/Organization"]//text()').extract_first().strip().lower():
                     req.meta['premium'] = True
-                elif posted_date_list[1] == 'hours':
-                    req.meta['premium'] = False
+                    # posted_date_string = each.xpath('div/div/ul/li/p[@class="info-label-inline info-label-key"]/text()').extract_first()
+                    # posted_date_list = posted_date_string.split()
                 else:
-                    continue
+                    req.meta['premium'] = False
+                    posted_date_string = each.xpath('div/div/ul/li/p[@class="info-label-value is-recent"]/text()').extract_first()
+                    posted_date_list = posted_date_string.split()
+                    if posted_date_list[1] == 'hours':
+                        pass
+                    else:
+                        continue
 
                 url = response.urljoin(href.extract_first())
                 req = scrapy.Request(url, callback=self.parse_job_details)
