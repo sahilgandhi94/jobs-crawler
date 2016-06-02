@@ -50,9 +50,7 @@ class BabaJobsScrapy(scrapy.Spider):
                     req.meta['premium'] = False
                     posted_date_string = each.xpath('div/div/ul/li/p[@class="info-label-value is-recent"]/text()').extract_first()
                     posted_date_list = posted_date_string.split()
-                    if posted_date_list[1] == 'hours':
-                        pass
-                    else:
+                    if not posted_date_list[1] == 'hours':
                         continue
 
                 req.meta['url'] = url
@@ -112,10 +110,6 @@ class BabaJobsScrapy(scrapy.Spider):
         job['address'] = 'NA'
         job['industry'] = 'NA'
         job['role'] = 'NA'
-        job['telephone'] = 'NA'
-        job['email_id'] = 'NA'
-        job['website'] = 'NA'
-
         yield job
 
 

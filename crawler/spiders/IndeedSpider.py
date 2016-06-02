@@ -20,7 +20,6 @@ class IndeedScrapy(scrapy.Spider):
         'http://www.indeed.co.in/jobs?q=data+operator&l=Thane&start=0',
         'http://www.indeed.co.in/jobs?q=field+work&l=Thane&start=0',
 
-
         'http://www.indeed.co.in/jobs?q=office+boy&l=Mumbai&start=0',
         'http://www.indeed.co.in/jobs?q=office+administrative&l=Mumbai&start=0',
         'http://www.indeed.co.in/jobs?q=back+office&l=Mumbai&start=0',
@@ -28,7 +27,6 @@ class IndeedScrapy(scrapy.Spider):
         'http://www.indeed.co.in/jobs?q=computer+operator&l=Mumbai&start=0',
         'http://www.indeed.co.in/jobs?q=data+operator&l=Mumbai&start=0',
         'http://www.indeed.co.in/jobs?q=field+work&l=Mumbai&start=0',
-
 
         'http://www.indeed.co.in/jobs?q=office+boy&l=Navi+Mumbai&start=0',
         'http://www.indeed.co.in/jobs?q=office+administrative&l=Navi+Mumbai&start=0',
