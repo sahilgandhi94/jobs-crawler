@@ -39,6 +39,7 @@ class BabaJobsScrapy(scrapy.Spider):
                 href = each.xpath('div/div/h2[@class="s-card-title"]/a/@href')
                 experience_requirements = each.xpath('div/div/ul/li/text()').extract()[1]
                 count_per_page = count_per_page + 1
+                req = scrapy.Request(url, callback=self.parse_job_details)
 
                 if 'sponsored' in each.xpath('div/div/h4[@itemtype="http://schema.org/Organization"]//text()').extract_first().strip().lower():
                     req.meta['premium'] = True
@@ -54,7 +55,6 @@ class BabaJobsScrapy(scrapy.Spider):
                         continue
 
                 url = response.urljoin(href.extract_first())
-                req = scrapy.Request(url, callback=self.parse_job_details)
                 req.meta['url'] = url
                 req.meta['experience_requirements'] = experience_requirements
                 yield req
