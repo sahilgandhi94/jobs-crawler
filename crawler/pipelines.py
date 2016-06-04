@@ -14,7 +14,7 @@ import json
 import os
 
 
-GOOGLE_PLACES_API_KEY="AIzaSyBu8-KRJdiU0D5xnu6xTnEZ0dg1SAh_OhM"
+GOOGLE_PLACES_API_KEY = "AIzaSyBu8-KRJdiU0D5xnu6xTnEZ0dg1SAh_OhM"
 GOOGLE_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json"
 GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/json"
 
@@ -69,11 +69,12 @@ class FetchGoogleDataPipeline(object):
             if textsearch.status_code == 200 and textsearch.json()['status'] == 'OK':
                 data = textsearch.json()['results'][0]
                 item['place_id'] = data['place_id']
-
+                print("place_id: " + data['place_id'])
                 payload = {
                     'placeid': item['place_id'],
                     'key':GOOGLE_PLACES_API_KEY
                 }
+                print("payload: " + json.dumps(payload))
                 detailsearch = requests.get(GOOGLE_DETAIL_SEARCH_URL, params=payload)
                 if detailsearch.status_code == 200 and detailsearch.json()['status'] == 'OK':
                     print('=== getting google detail data ===')
@@ -106,6 +107,10 @@ class FetchGoogleDataPipeline(object):
                         item['longitude'] = data['geometry']['location']['lng']
                     except KeyError:
                         pass
+                else:
+                    print("Detail search failed: " + detailsearch.text())
+            else:
+                print("Text search failed: " + textsearch.text())
         return item
 
 class CSVExportPipeline(object):
