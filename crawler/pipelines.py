@@ -28,7 +28,7 @@ class DynamoDBStorePipeline(object):
                                        aws_secret_access_key='ih9AuCceDekdQ3IwjAamieZOMyX1gX3rsS/Ti+Lc',
                                        region_name="us-east-1")
             dynamodb = dynamodb_session.resource('dynamodb', region_name='us-east-1')
-            table = dynamodb.Table('candidate_leads_test')
+            table = dynamodb.Table('candidate_leads')
             name = item['name']
             mobile=item['mobile']
             location=item['location']
@@ -180,9 +180,10 @@ class FetchGoogleDataPipeline(object):
                         except KeyError:
                             pass
                     else:
-                        print("Detail search failed: " + detailsearch.text())
+                        print("Detail search failed: " + detailsearch.text
+)
                 else:
-                    print("Text search failed: " + textsearch.text())
+                    print("Text search failed: " + textsearch.text)
         return item
 
 class CSVExportPipeline(object):
@@ -203,7 +204,7 @@ class CSVExportPipeline(object):
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         else:
             filename = '%s_cand_%s.csv' % (spider.name, time.strftime("%d_%m_%Y"))
-            path = os.path.expanduser("./candidates/%s" % filename)
+            path = os.path.expanduser("/tmp/candidate/%s" % filename)
         file = open(path, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
@@ -214,7 +215,10 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-        self._send_email(filename)
+	if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
+        	self._send_email(filename)
+	else:
+		self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
         if (spider.name not in ['babajobs', 'naukri', 'indeed', 'shine']):
@@ -244,3 +248,21 @@ class CSVExportPipeline(object):
         s.login("admin@workindia.in", "28092263")
         #s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
         s.sendmail("admin@workindia.in", ["ganesh.baleri@workindia.in"], msg.as_string())
+
+    def _send_candidate_email(self, filename):
+        print('====sending email %s ====' % filename)
+        msg = MIMEMultipart('alternative')
+        msg['From'] = "admin@workindia.in"
+        msg['To'] = "ganesh.baleri@workindia.in"
+        msg['Subject'] = 'Candidate scraping - %s' % datetime.utcnow().strftime('%d-%b-%Y')
+        # attach the csv file
+        file = open(filename)
+        attachment = MIMEText(file.read(), _subtype='csv')
+        file.close()
+        attachment.add_header('Content-Disposition', 'attachment', filename=filename.split('/')[-1].strip())
+        msg.attach(attachment)
+
+        s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        s.login("admin@workindia.in", "28092263")
+        #s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
+        s.sendmail("admin@workindia.in", ["ganesh.baleri@workindia.in","abhishek.agarwal@workindia.in","nishit.kagalwala@workindia.in"], msg.as_string())

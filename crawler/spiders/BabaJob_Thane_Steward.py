@@ -68,7 +68,7 @@ class BabaJobSpider(InitSpider):
 
     def init_request(self):
         print ("Init")
-        self.download_delay = 1
+        self.download_delay = 15
         """This function is called before crawling starts."""
         return Request(url=self.login_page, callback=self.login)
 
@@ -98,8 +98,8 @@ class BabaJobSpider(InitSpider):
         for each in response.xpath('//div[@class="s-card-inner"]'):
             href = each.xpath('div/div[@class="col-sm-7 s-col-data"]/h2/div/a/@href')
             item = CandidatescraperItem()
-            item['sector'] = response.xpath('//div[@id="dropdownMenu1"]/text()').extract_first()
-            item['location'] = response.xpath('//div[@id="dropdownMenu2"]/text()').extract_first()
+            item['sector'] = str(response.xpath('//div[@id="dropdownMenu1"]/text()').extract_first())
+            item['location'] = str(response.xpath('//div[@id="dropdownMenu2"]/text()').extract_first())
             item['source'] = {"BabaJob"}
             date = time.strftime("%d/%m/%Y")
             # print("date----------------------------------")

@@ -68,7 +68,7 @@ class BabaJobSpider(InitSpider):
 
     def init_request(self):
         print ("Init")
-        self.download_delay=12
+        self.download_delay=15
         """This function is called before crawling starts."""
         return Request(url=self.login_page, callback=self.login)
 

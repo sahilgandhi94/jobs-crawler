@@ -10,27 +10,25 @@ from scrapy.spiders import Rule
 from crawler.items  import CandidatescraperItem
 
 
-class BabaJobSpider(scrapy.Spider):
+class BabaJobSpider(InitSpider):
     name = "babajob_mumbai_driver"
     allowed_domains=["babajob.com"]
     login_page = 'http://www.babajob.com/login'
-    
 
     start_urls = [
-	 
-        #"http://www.babajob.com/Hire-BPO-in-Thane-sort-dateDesc-in_last_days-1",
-        # "http://www.babajob.com/Hire-Driver-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Helper-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Delivery-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Receptionist-in-Thane-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-BPO-in-Thane-sort-dateDesc-in_last_days-1",
+         #"http://www.babajob.com/Hire-Driver-in-Thane-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-Helper-in-Thane-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-Delivery-in-Thane-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-Receptionist-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Other-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-DataEntry-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Cashier-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Sales-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Management-in-Thane-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-Management-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Accountant-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Steward-in-Thane-sort-dateDesc-in_last_days-2",
+        #"http://www.babajob.com/Hire-Steward-in-Thane-sort-dateDesc-in_last_days-1",
         # # "http://www.babajob.com/Hire-Maid-in-Thane-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Cook-in-Thane-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Nanny-in-Thane-sort-dateDesc-in_last_days-2",
@@ -42,9 +40,9 @@ class BabaJobSpider(scrapy.Spider):
         # # "http://www.babajob.com/Hire-Engineer-in-Thane-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Beautician-in-Thane-sort-dateDesc-in_last_days-2",
         #
-        # "http://www.babajob.com/Hire-BPO-in-Mumbai-sort-dateDesc-in_last_days-2",
-        "http://www.babajob.com/Hire-Driver-in-Mumbai-sort-dateDesc-in_last_days-1",
-        # "http://www.babajob.com/Hire-Helper-in-Mumbai-sort-dateDesc-in_last_days-2",
+         #"http://www.babajob.com/Hire-BPO-in-Mumbai-sort-dateDesc-in_last_days-2",
+         "http://www.babajob.com/Hire-Driver-in-Mumbai-sort-dateDesc-in_last_days-1",
+         #"http://www.babajob.com/Hire-Helper-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Delivery-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Receptionist-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Other-in-Mumbai-sort-dateDesc-in_last_days-2",
@@ -70,7 +68,7 @@ class BabaJobSpider(scrapy.Spider):
 
     def init_request(self):
         print ("Init")
-        self.download_delay = 12
+        self.download_delay = 15
         """This function is called before crawling starts."""
         return Request(url=self.login_page, callback=self.login)
 
@@ -113,13 +111,13 @@ class BabaJobSpider(scrapy.Spider):
             yield req
 
 
-        if(next is not None) :
-        
-             url = response.urljoin(next.extract_first())
-             paginate_req = scrapy.Request(url, callback=self.parse)
-             yield paginate_req
+        if(next is not None):
+
+            url = response.urljoin(next.extract_first())
+            paginate_req = scrapy.Request(url, callback=self.parse)
+            yield paginate_req
         else:
-             return
+            return
 
 
 
@@ -136,6 +134,8 @@ class BabaJobSpider(scrapy.Spider):
             #print item
             #with open("BabaJobs.txt", "a") as text_file:text_file.write(item['mobile']+"\n")
             #yield item
+
+
         except:
             return
         finally:
