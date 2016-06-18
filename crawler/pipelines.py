@@ -180,10 +180,9 @@ class FetchGoogleDataPipeline(object):
                         except KeyError:
                             pass
                     else:
-                        print("Detail search failed: " + detailsearch.text
-)
+                        print("Detail search failed: " + detailsearch.text.encode('utf-8'))
                 else:
-                    print("Text search failed: " + textsearch.text)
+                    print("Text search failed: " + textsearch.text.encode('utf-8'))
         return item
 
 class CSVExportPipeline(object):
@@ -198,7 +197,6 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-
         if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
@@ -246,8 +244,8 @@ class CSVExportPipeline(object):
 
         s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         s.login("admin@workindia.in", "28092263")
-        #s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
-        s.sendmail("admin@workindia.in", ["ganesh.baleri@workindia.in"], msg.as_string())
+        s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
+        # s.sendmail("admin@workindia.in", ["sahil.gandhi@workindia.in"], msg.as_string())
 
     def _send_candidate_email(self, filename):
         print('====sending email %s ====' % filename)
@@ -264,5 +262,4 @@ class CSVExportPipeline(object):
 
         s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         s.login("admin@workindia.in", "28092263")
-        #s.sendmail("admin@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
         s.sendmail("admin@workindia.in", ["ganesh.baleri@workindia.in","abhishek.agarwal@workindia.in","nishit.kagalwala@workindia.in"], msg.as_string())
