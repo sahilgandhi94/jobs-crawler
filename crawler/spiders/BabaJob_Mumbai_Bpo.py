@@ -40,7 +40,7 @@ class BabaJobSpider(InitSpider):
         # # "http://www.babajob.com/Hire-Engineer-in-Thane-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Beautician-in-Thane-sort-dateDesc-in_last_days-2",
         #
-        "http://www.babajob.com/Hire-BPO-in-Mumbai-sort-dateDesc-in_last_days-1",
+        "http://www.babajob.com/Hire-BPO-in-Mumbai-sort-dateDesc-in_last_days-1-include_mobile_users",
         # "http://www.babajob.com/Hire-Driver-in-Mumbai-sort-dateDesc-in_last_days-2",
          #"http://www.babajob.com/Hire-Helper-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Delivery-in-Mumbai-sort-dateDesc-in_last_days-2",

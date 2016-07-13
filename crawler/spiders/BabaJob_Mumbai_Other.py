@@ -46,7 +46,7 @@ class BabaJobSpider(InitSpider):
          #"http://www.babajob.com/Hire-Helper-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Delivery-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Receptionist-in-Mumbai-sort-dateDesc-in_last_days-2",
-        "http://www.babajob.com/Hire-Other-in-Mumbai-sort-dateDesc-in_last_days-1",
+        "http://www.babajob.com/Hire-Other-in-Mumbai-sort-dateDesc-in_last_days-1-include_mobile_users",
         # "http://www.babajob.com/Hire-DataEntry-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Cashier-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Sales-in-Mumbai-sort-dateDesc-in_last_days-2",

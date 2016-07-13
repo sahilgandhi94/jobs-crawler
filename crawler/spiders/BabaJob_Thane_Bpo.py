@@ -16,7 +16,7 @@ class BabaJobSpider(InitSpider):
     login_page = 'http://www.babajob.com/login'
 
     start_urls = [
-         "http://www.babajob.com/Hire-BPO-in-Thane-sort-dateDesc-in_last_days-1",
+         "http://www.babajob.com/Hire-BPO-in-Thane-sort-dateDesc-in_last_days-1-include_mobile_users",
          #"http://www.babajob.com/Hire-Driver-in-Thane-sort-dateDesc-in_last_days-2",
          #"http://www.babajob.com/Hire-Helper-in-Thane-sort-dateDesc-in_last_days-2",
          #"http://www.babajob.com/Hire-Delivery-in-Thane-sort-dateDesc-in_last_days-2",
