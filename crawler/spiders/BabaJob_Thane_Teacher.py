@@ -60,7 +60,7 @@ class BabaJobSpider(InitSpider):
             # print("date----------------------------------")
             # print(date)
             item['date']=date
-            time.sleep(2)
+            time.sleep(15)
             url = response.urljoin(href.extract_first())
             req = scrapy.Request(url, callback=self.parse_job_details,meta={'item': item})
             yield req
