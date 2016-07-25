@@ -16,54 +16,9 @@ class BabaJobSpider(InitSpider):
     login_page = 'http://www.babajob.com/login'
 
     start_urls = [
-         #"http://www.babajob.com/Hire-BPO-in-Thane-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Driver-in-Thane-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Helper-in-Thane-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Delivery-in-Thane-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Receptionist-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Other-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-DataEntry-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Cashier-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Sales-in-Thane-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Management-in-Thane-sort-dateDesc-in_last_days-2",
-         "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-1-include_mobile_users",
-        # "http://www.babajob.com/Hire-Accountant-in-Thane-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Steward-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Maid-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Cook-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Nanny-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Guard-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Laborer-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Tailor-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Nurse-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Machinist-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Engineer-in-Thane-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Beautician-in-Thane-sort-dateDesc-in_last_days-2",
-        #
-         #"http://www.babajob.com/Hire-BPO-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Driver-in-Mumbai-sort-dateDesc-in_last_days-2",
-         #"http://www.babajob.com/Hire-Helper-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Delivery-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Receptionist-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Other-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-DataEntry-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Cashier-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Sales-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Management-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Teacher-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Accountant-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # "http://www.babajob.com/Hire-Steward-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Maid-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Cook-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Nanny-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Guard-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Laborer-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Tailor-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Nurse-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Machinist-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Engineer-in-Mumbai-sort-dateDesc-in_last_days-2",
-        # # "http://www.babajob.com/Hire-Beautician-in-Mumbai-sort-dateDesc-in_last_days-2",
-
+       
+        "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-3-include_mobile_users",
+     
     ]
 
     def init_request(self):

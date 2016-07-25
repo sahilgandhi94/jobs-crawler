@@ -100,8 +100,8 @@ USER_AGENT_LIST = [
 
 HTTP_PROXY = 'http://127.0.0.1:8123'
 DOWNLOADER_MIDDLEWARES = {
-     'crawler.middlewares.RandomUserAgentMiddleware': 400,
-     'crawler.middlewares.ProxyMiddleware': 410,
-     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware':None
+     # 'crawler.middlewares.RandomUserAgentMiddleware': 400,
+     # 'crawler.middlewares.ProxyMiddleware': 410,
+     # 'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware':None
     # Disable compression middleware, so the actual HTML pages are cached
 }

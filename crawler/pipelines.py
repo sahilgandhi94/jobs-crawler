@@ -28,7 +28,7 @@ class DynamoDBStorePipeline(object):
                                        aws_secret_access_key='ih9AuCceDekdQ3IwjAamieZOMyX1gX3rsS/Ti+Lc',
                                        region_name="us-east-1")
             dynamodb = dynamodb_session.resource('dynamodb', region_name='us-east-1')
-            table = dynamodb.Table('candidate_leads')
+            table = dynamodb.Table('prod_candidate_leads')
             name = item['name']
             mobile=item['mobile']
             location=item['location']
