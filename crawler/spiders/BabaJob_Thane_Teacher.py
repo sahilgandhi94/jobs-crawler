@@ -17,7 +17,7 @@ class BabaJobSpider(InitSpider):
 
     start_urls = [
        
-        "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-3-include_mobile_users",
+        "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-1-include_mobile_users",
      
     ]
 
