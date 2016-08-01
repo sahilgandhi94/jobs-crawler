@@ -52,7 +52,7 @@ class BabaJobSpider(InitSpider):
         # "http://www.babajob.com/Hire-Management-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Teacher-in-Mumbai-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Accountant-in-Mumbai-sort-dateDesc-in_last_days-2",
-        "http://www.babajob.com/Hire-Steward-in-Mumbai-sort-dateDesc-in_last_days-1-include_mobile_users",
+        "http://www.babajob.com/Hire-Steward-in-Mumbai-sort-dateDesc-in_last_days-2-include_mobile_users",
         # # "http://www.babajob.com/Hire-Maid-in-Mumbai-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Cook-in-Mumbai-sort-dateDesc-in_last_days-2",
         # # "http://www.babajob.com/Hire-Nanny-in-Mumbai-sort-dateDesc-in_last_days-2",
