@@ -19,10 +19,11 @@ GOOGLE_PLACES_API_KEY = "AIzaSyBu8-KRJdiU0D5xnu6xTnEZ0dg1SAh_OhM"
 GOOGLE_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json"
 GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/json"
 
+
 class DynamoDBStorePipeline(object):
 
     def process_item(self, item, spider):
-         if (spider.name not in ['babajobs','naukri','indeed','shine']):
+         if spider.name not in ['babajobs','naukri','indeed','shine']:
 
             dynamodb_session = Session(aws_access_key_id='AKIAJT6AN3A5WZEZ74WA',
                                        aws_secret_access_key='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',
@@ -34,8 +35,6 @@ class DynamoDBStorePipeline(object):
             location=item['location']
             sector=item['sector']
             source=item['source']
-
-
 
             if item['mobile'] is not None :
                  try:
@@ -89,7 +88,7 @@ class DynamoDBStorePipeline(object):
 
 class JobPostProcessingPipeline(object):
     def process_item(self, item, spider):
-        if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
             if isinstance(item, JobItem):
                 print('==== post processing ====')
                 _pass = True
@@ -129,7 +128,7 @@ class FetchGoogleDataPipeline(object):
         # fetch company data from google
         # text search - https://maps.googleapis.com/maps/api/place/textsearch/json?query=peppermint%20communications%20mumbai&key=
         # detail search - https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJDdjQVhbJ5zsRxM8KlfZaifk&key=
-        if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
             if isinstance(item, JobItem):
                 print('==== fetch data from google ====')
                 payload = {
@@ -213,13 +212,14 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-	if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
-        	self._send_email(filename)
-	else:
-		# self._send_candidate_email(filename)
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
+            self._send_email(filename)
+        else:
+            pass
+            # self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
-        if (spider.name not in ['babajobs', 'naukri', 'indeed', 'shine']):
+        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
