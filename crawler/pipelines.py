@@ -216,7 +216,7 @@ class CSVExportPipeline(object):
 	if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine']):
         	self._send_email(filename)
 	else:
-		self._send_candidate_email(filename)
+		# self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
         if (spider.name not in ['babajobs', 'naukri', 'indeed', 'shine']):
