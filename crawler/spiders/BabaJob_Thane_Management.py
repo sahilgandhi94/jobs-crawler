@@ -25,7 +25,7 @@ class BabaJobSpider(InitSpider):
         # "http://www.babajob.com/Hire-DataEntry-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Cashier-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Sales-in-Thane-sort-dateDesc-in_last_days-2",
-         "http://www.babajob.com/Hire-Management-in-Thane-sort-dateDesc-in_last_days-3-include_mobile_users",
+         "http://www.babajob.com/Hire-Management-in-Thane-sort-dateDesc-in_last_days-1-include_mobile_users",
         # "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Accountant-in-Thane-sort-dateDesc-in_last_days-2",
         # "http://www.babajob.com/Hire-Steward-in-Thane-sort-dateDesc-in_last_days-2",

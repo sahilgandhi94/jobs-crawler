@@ -16,7 +16,7 @@ class BabaJobSpider(InitSpider):
     login_page = 'http://www.babajob.com/login'
 
     start_urls = [
-        "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-3-include_mobile_users",
+        "http://www.babajob.com/Hire-Teacher-in-Thane-sort-dateDesc-in_last_days-1-include_mobile_users",
     ]
 
     def init_request(self):
