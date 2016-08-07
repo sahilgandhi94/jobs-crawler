@@ -2,8 +2,8 @@ import scrapy
 
 from crawler.items import JobItem
 
-class OLX(scrapy.Spider):
-    name = "olx"
+class OlxComplete(scrapy.Spider):
+    name = "olx_complete"
     allowed_domains = ["olx.in"]
     start_urls = [
         'https://www.olx.in/mumbai/customer-service/?page=1',
@@ -27,11 +27,9 @@ class OLX(scrapy.Spider):
         for i in range(0, 50):
             tbody = response.xpath(".//*[@id='promotedAd']/tbody")
             href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
-            date = response.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
             if len(href) > 0:
                 print(href)
                 href = self._rstrip(href)[0]
-                # date = self._rstrip(date)[0]
                 req = scrapy.Request(href, callback=self.parse_job_details)
                 req.meta['url'] = href
                 req.meta['premium'] = True
@@ -41,15 +39,11 @@ class OLX(scrapy.Spider):
         for i in range(0, 100):
             tbody = response.xpath(".//*[@id='offers_table']/tbody")
             href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
-            date = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
-            if len(href) > 0 and len(date) > 0:
+            if len(href) > 0:
                 href = self._rstrip(href)[0]
-                date = self._rstrip(date)[0]
-
-                if date.lower() == 'yesterday':
-                    req = scrapy.Request(href, callback=self.parse_job_details)
-                    req.meta['url'] = href
-                    yield req
+                req = scrapy.Request(href, callback=self.parse_job_details)
+                req.meta['url'] = href
+                yield req
 
         base_url = response.url.split('?')[0]
         try:
