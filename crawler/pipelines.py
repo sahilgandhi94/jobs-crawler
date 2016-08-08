@@ -23,7 +23,7 @@ GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/j
 class DynamoDBStorePipeline(object):
 
     def process_item(self, item, spider):
-         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx']:
+         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx', 'olx_complete', 'zaubacorp']:
 
             dynamodb_session = Session(aws_access_key_id='AKIAJT6AN3A5WZEZ74WA',
                                        aws_secret_access_key='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',
@@ -196,7 +196,7 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx']):
+        if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']):
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         else:
@@ -212,14 +212,14 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']:
             self._send_email(filename)
         else:
             pass
             # self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
-        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx']:
+        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
