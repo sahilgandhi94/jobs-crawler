@@ -1,5 +1,5 @@
 import time
-from crawler.items import JobItem
+from crawler.items import JobItem, SectorItem
 from scrapy.exceptions import DropItem
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
@@ -23,7 +23,7 @@ GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/j
 class DynamoDBStorePipeline(object):
 
     def process_item(self, item, spider):
-         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx', 'olx_complete', 'zaubacorp']:
+         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
 
             dynamodb_session = Session(aws_access_key_id='AKIAJT6AN3A5WZEZ74WA',
                                        aws_secret_access_key='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',
@@ -88,26 +88,9 @@ class DynamoDBStorePipeline(object):
 
 class JobPostProcessingPipeline(object):
     def process_item(self, item, spider):
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'sector']:
             if isinstance(item, JobItem):
-                print('==== post processing ====')
                 _pass = True
-                # remove any item that has 'bpo' in it
-                if self._contains(item['industry'], 'bpo'):
-                    raise DropItem("Dropping item because bpo: %s" % item['industry'])
-                    _pass = False
-
-                # remove if experience_requirements is > 2 years
-                # ex str: '2 - 5 yrs', '4 - 7 yrs'
-                _temp = item['experience_requirements']
-                try:
-                    if int(_temp[0:_temp.find('-')].strip()) > 1:
-                        raise DropItem("Dropping item because exp req > 1 :"  + item['experience_requirements'])
-                        _pass = False
-                except DropItem as e:
-                    raise e
-                except ValueError:
-                    pass
 
                 if self._contains(item['location'], 'bangalore') or self._contains(item['location'], 'delhi') or self._contains(item['location'], 'kolkata'):
                     raise DropItem("Dropping item because location :" + item['location'])
@@ -117,17 +100,17 @@ class JobPostProcessingPipeline(object):
                     raise DropItem("Dropping item because comp name :" + item['company_name'])
                     _pass = False
 
-                if _pass: return item
+                if _pass:
+                    return item
         return item
 
     def _contains(self, str, key):
         return str.lower().find(key) > -1
 
+
 class FetchGoogleDataPipeline(object):
     def process_item(self, item, spider):
         # fetch company data from google
-        # text search - https://maps.googleapis.com/maps/api/place/textsearch/json?query=peppermint%20communications%20mumbai&key=
-        # detail search - https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJDdjQVhbJ5zsRxM8KlfZaifk&key=
         if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
             if isinstance(item, JobItem):
                 print('==== fetch data from google ====')
@@ -143,7 +126,7 @@ class FetchGoogleDataPipeline(object):
                     print("place_id: " + data['place_id'])
                     payload = {
                         'placeid': item['place_id'],
-                        'key':GOOGLE_PLACES_API_KEY
+                        'key': GOOGLE_PLACES_API_KEY
                     }
                     print("payload: " + json.dumps(payload))
                     detailsearch = requests.get(GOOGLE_DETAIL_SEARCH_URL, params=payload)
@@ -178,6 +161,12 @@ class FetchGoogleDataPipeline(object):
                             item['longitude'] = data['geometry']['location']['lng']
                         except KeyError:
                             pass
+                        try:
+                            for ac in data['address_components']:
+                                if 'sublocality_level_1' in ac['types']:
+                                    item['station'] = ac['long_name']
+                        except KeyError:
+                            pass
                     else:
                         print("Detail search failed: " + detailsearch.text.encode('utf-8'))
                 else:
@@ -196,7 +185,7 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        if (spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']):
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         else:
@@ -212,14 +201,14 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
             self._send_email(filename)
         else:
             pass
             # self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
-        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp']:
+        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
@@ -244,8 +233,12 @@ class CSVExportPipeline(object):
 
         s = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         s.login("contactswa@workindia.in", "Nishit123")
-        s.sendmail("contactswa@workindia.in", ["sales-workindia@workindia.in", "sahil.gandhi@workindia.in", "moiz.arsiwala@workindia.in"], msg.as_string())
-        # s.sendmail("admin@workindia.in", ["sahil.gandhi@workindia.in"], msg.as_string())
+        # s.sendmail("contactswa@workindia.in", ["sales-workindia@workindia.in",
+        #                                        "sahil.gandhi@workindia.in",
+        #                                        "moiz.arsiwala@workindia.in",
+        #                                        "akshay.ghutukade@workindia.in",
+        #                                        "aniket.ghole@workindia.in"], msg.as_string())
+        s.sendmail("admin@workindia.in", ["sahil.gandhi@workindia.in"], msg.as_string())
 
     def _send_candidate_email(self, filename):
         print('====sending email %s ====' % filename)

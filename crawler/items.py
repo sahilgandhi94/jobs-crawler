@@ -37,6 +37,7 @@ class JobItem(scrapy.Item):
     latitude = scrapy.Field()
     longitude = scrapy.Field()
 
+
 class CandidatescraperItem(scrapy.Item):
         # define the fields for your item here like:
         name = scrapy.Field()
@@ -45,3 +46,18 @@ class CandidatescraperItem(scrapy.Item):
         sector = scrapy.Field()
         source = scrapy.Field()
         date = scrapy.Field()
+
+
+class SectorItem(scrapy.Item):
+    date = scrapy.Field()
+    title = scrapy.Field()
+    location = scrapy.Field()
+    description = scrapy.Field()
+    company_name = scrapy.Field()
+    contact_person_name = scrapy.Field()
+    number = scrapy.Field()
+    position = scrapy.Field()
+    role = scrapy.Field()
+    # url = scrapy.Field()
+    # google_number_1 = scrapy.Field()
+    portal = scrapy.Field()
