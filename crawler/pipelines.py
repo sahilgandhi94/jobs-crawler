@@ -23,7 +23,7 @@ GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/j
 class DynamoDBStorePipeline(object):
 
     def process_item(self, item, spider):
-         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
+         if spider.name not in ['babajobs','naukri','indeed','shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
 
             dynamodb_session = Session(aws_access_key_id='AKIAJT6AN3A5WZEZ74WA',
                                        aws_secret_access_key='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',
@@ -33,7 +33,7 @@ class DynamoDBStorePipeline(object):
             name = item['name']
             mobile=item['mobile']
             location=item['location']
-            sector=item['sector']
+            sector=item['sector', 'sector1']
             source=item['source']
 
             if item['mobile'] is not None :
@@ -88,7 +88,7 @@ class DynamoDBStorePipeline(object):
 
 class JobPostProcessingPipeline(object):
     def process_item(self, item, spider):
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'sector']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'sector', 'sector1']:
             if isinstance(item, JobItem):
                 _pass = True
 
@@ -171,7 +171,45 @@ class FetchGoogleDataPipeline(object):
                         print("Detail search failed: " + detailsearch.text.encode('utf-8'))
                 else:
                     print("Text search failed: " + textsearch.text.encode('utf-8'))
+
+        if spider.name in ['sector', 'sector1']:
+            if isinstance(item, SectorItem):
+                if len(item['company_name']) < 5:
+                    return item
+                payload = {
+                    'query': item['company_name']+' mumbai',
+                    'key': GOOGLE_PLACES_API_KEY
+                }
+                textsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
+                if textsearch.status_code == 200 and textsearch.json()['status'] == 'OK':
+                    data = textsearch.json()['results'][0]
+                    payload = {
+                        'placeid': data['place_id'],
+                        'key': GOOGLE_PLACES_API_KEY
+                    }
+                    detailsearch = requests.get(GOOGLE_DETAIL_SEARCH_URL, params=payload)
+                    if detailsearch.status_code == 200 and detailsearch.json()['status'] == 'OK':
+                        data = detailsearch.json()['result']
+                        try:
+                            item['google_address'] = data['formatted_address']
+                        except KeyError:
+                            pass
+                        try:
+                            item['google_phone_number'] = data['international_phone_number']
+                        except KeyError:
+                            pass
+                        try:
+                            for ac in data['address_components']:
+                                if 'sublocality_level_1' in ac['types']:
+                                    item['station'] = ac['long_name']
+                        except KeyError:
+                            pass
+                    else:
+                        print("Detail search failed: " + detailsearch.text.encode('utf-8'))
+                else:
+                    print("Text search failed: " + textsearch.text.encode('utf-8'))
         return item
+
 
 class CSVExportPipeline(object):
     def __init__(self):
@@ -185,7 +223,7 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         else:
@@ -201,14 +239,14 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
+        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
             self._send_email(filename)
         else:
             pass
             # self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
-        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector']:
+        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
@@ -235,9 +273,8 @@ class CSVExportPipeline(object):
         s.login("contactswa@workindia.in", "Nishit123")
         # s.sendmail("contactswa@workindia.in", ["sales-workindia@workindia.in",
         #                                        "sahil.gandhi@workindia.in",
-        #                                        "moiz.arsiwala@workindia.in",
-        #                                        "akshay.ghutukade@workindia.in",
-        #                                        "aniket.ghole@workindia.in"], msg.as_string())
+        #                                        "moiz.arsiwala@workindia.in"],
+        #                                        msg.as_string())
         s.sendmail("admin@workindia.in", ["sahil.gandhi@workindia.in"], msg.as_string())
 
     def _send_candidate_email(self, filename):

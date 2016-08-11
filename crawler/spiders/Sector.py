@@ -128,6 +128,7 @@ OFFICE_BOY = [
     "http://www.shine.com/job-search/simple/officeassistant/mumbai/",
 ]
 
+
 class SectorSpider(scrapy.Spider):
     name = "sector"
     allowed_domains = ["naukri.com", "shine.com", "olx.in"]
@@ -184,8 +185,8 @@ class SectorSpider(scrapy.Spider):
                     # print("Scrapping......")
                     url = 'http://shine.com'+url
                     # print(url)
-                    req.meta['position'] = position
                     req = scrapy.Request(url, callback=self.parse_shine_details)
+                    req.meta['position'] = position
                     req.meta['url'] = url
                     yield req
 
@@ -213,8 +214,8 @@ class SectorSpider(scrapy.Spider):
             if not flag:
                 return
             else:
-                req.meta['position'] = position
                 paginate_req = scrapy.Request(nextUrl, callback=self.parse_shine)
+                paginate_req.meta['position'] = position
                 # paginate_req.meta['total_count'] = total_count
                 # paginate_req.meta['total_items_iterated'] = total_items_iterated
                 yield paginate_req
@@ -227,7 +228,10 @@ class SectorSpider(scrapy.Spider):
         job_posting = response.xpath('//div[@itemtype="http://schema.org/JobPosting"]')[0]
         job['title'] = job_posting.xpath('//h1[@itemprop="title"]/text()').extract_first()
         job['date'] = job_posting.xpath('//span[@itemprop="datePosted"]/text()').extract_first()
-        job['location'] = self._join(job_posting.xpath('//a[@class="normaljdsnippet jd_location curText cls_jd_primary_location"]/text()').extract(), delimeter=',') #check this out later
+        # old location xpath: '//a[@class="normaljdsnippet jd_location curText cls_jd_primary_location"]//text()'
+        job['location'] = self._join(job_posting.xpath(
+            '//span[@itemtype="http://schema.org/Place"]/*//text()'
+        ).extract(), delimeter=',')
         job['description'] = job_posting.xpath('//span[@itemprop="description"]//text()').extract()
         job['company_name'] = job_posting.xpath('//span[@itemprop="name"]/h2/text()').extract_first()
         job['contact_person_name'] = ''
@@ -313,9 +317,13 @@ class SectorSpider(scrapy.Spider):
         salary = response.xpath(".//*[@id='offeractions']/div/div[1]/div[1]/strong/span/text()").extract()
         salary = self._join(salary).encode('utf-8')
 
-        name = response.xpath(".//*[@id='offeractions']/div/div[1]/div[2]/div/p/span[1]/text()").extract_first().encode('utf-8')
+        name = response.xpath(".//*[@id='offeractions']/div/div[1]/div[2]/div/p/span[1]/text()").extract_first()
+        if name is not None:
+            name = name.encode('utf-8')
 
-        phone_no = response.xpath(".//*[@id='contact_methods']/li[3]/div[2]/strong[1]/text()").extract_first().encode('utf-8')
+        phone_no = response.xpath(".//*[@id='contact_methods']/li[3]/div[2]/strong[1]/text()").extract_first()
+        if phone_no is not None:
+            phone_no = phone_no.encode('utf-8')
 
         jd = response.xpath(".//*[@id='textContent']/p/text()").extract()
         job_desc = self._join(jd)
@@ -379,7 +387,7 @@ class SectorSpider(scrapy.Spider):
                     if current_paginate_number > next_paginate_number:
                         return
                     paginate_req.meta['current_paginate_number'] = next_paginate_number
-                    req.meta['position'] = position
+                    paginate_req.meta['position'] = position
                     yield paginate_req
 
     def parse_naukri_details(self, response):
@@ -393,9 +401,13 @@ class SectorSpider(scrapy.Spider):
 
         job = SectorItem()
         job_posting = response.xpath('//div[@itemtype="http://schema.org/JobPosting"]')[0]
-        job['url'] = response.meta['url']
+        # job['url'] = response.meta['url']
         job['title'] = self._join(job_posting.xpath('//h1[@itemprop="title"]/text()').extract())
         job['company_name'] = self._join(job_posting.xpath('//a[@itemprop="hiringOrganization"]/text()').extract())
+
+        location = job_posting.xpath('//em[@itemprop="jobLocation"]')
+        if location is not None:
+            job['location'] = self._join(location[0].xpath('//div[@itemprop="name"]/a/text()').extract(), delimeter=', ')
 
         job['description'] = self._join(job_posting.xpath('//ul[@itemprop="description"]//text()').extract())
         job['role'] = ''
@@ -413,7 +425,7 @@ class SectorSpider(scrapy.Spider):
             contact = {k.lower(): v for k, v in contact.items()}  # convert all keys to lowercase
 
             job['number'] = self._fetch(contact, 'telephone')
-            job['email'] = self._fetch(contact, 'email address', 'title')
+            # job['email'] = self._fetch(contact, 'email address', 'title')
             job['contact_person_name'] = self._fetch(contact, 'recruiter name')
 
         job['date'] = job_posting.xpath('//div[@class="sumFoot"]//text()').re('Posted\s*(.*)')

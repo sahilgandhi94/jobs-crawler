@@ -58,6 +58,8 @@ class SectorItem(scrapy.Item):
     number = scrapy.Field()
     position = scrapy.Field()
     role = scrapy.Field()
-    # url = scrapy.Field()
-    # google_number_1 = scrapy.Field()
     portal = scrapy.Field()
+    google_address = scrapy.Field()
+    google_phone_number = scrapy.Field()
+    station = scrapy.Field()
+
