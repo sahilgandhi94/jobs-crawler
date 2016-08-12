@@ -62,4 +62,5 @@ class SectorItem(scrapy.Item):
     google_address = scrapy.Field()
     google_phone_number = scrapy.Field()
     station = scrapy.Field()
+    email = scrapy.Field()
 

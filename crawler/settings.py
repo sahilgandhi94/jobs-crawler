@@ -66,10 +66,13 @@ DOWNLOAD_DELAY = 1
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'crawler.pipelines.DynamoDBStorePipeline': 100,
-   'crawler.pipelines.JobPostProcessingPipeline': 300,
-   'crawler.pipelines.FetchGoogleDataPipeline' : 400,
-   'crawler.pipelines.CSVExportPipeline': 500,
+    'crawler.pipelines.DynamoDBStorePipeline': 100,
+    'crawler.pipelines.SectorSpiderCleaning': 200,
+    'crawler.pipelines.NewDynamoPipeline': 225,
+    'crawler.pipelines.SectorSpiderFiltering': 250,
+    'crawler.pipelines.JobPostProcessingPipeline': 300,
+    'crawler.pipelines.FetchGoogleDataPipeline': 400,
+    'crawler.pipelines.CSVExportPipeline': 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

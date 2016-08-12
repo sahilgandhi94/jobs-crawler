@@ -243,6 +243,12 @@ class SectorSpider(scrapy.Spider):
             except ValueError:
                 pass
 
+            try:
+                if re.match('Email\s*(.*)', i):
+                    job['email'] = recruiter_details[recruiter_details.index(i)+1]
+            except:
+                pass
+
         job['role'] = self._join(job_posting.xpath('//span[@itemprop="skills"]/a/text()').extract(), delimeter=',')
         job['position'] = response.meta.get('position', '')
         job['portal'] = 'shine'
@@ -423,6 +429,13 @@ class SectorSpider(scrapy.Spider):
         if r.status_code == 200:
             contact = r.json()['fields']
             contact = {k.lower(): v for k, v in contact.items()}  # convert all keys to lowercase
+
+            try:
+                if 'email address' in contact.keys() and 'src' in contact['email address'].keys():
+                    contact['email address'].pop('src', 'no src found')
+                job['email'] = self._fetch(contact, 'email address', 'title')
+            except:
+                pass
 
             job['number'] = self._fetch(contact, 'telephone')
             # job['email'] = self._fetch(contact, 'email address', 'title')
