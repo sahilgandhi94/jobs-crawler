@@ -70,7 +70,6 @@ ITEM_PIPELINES = {
     'crawler.pipelines.SectorSpiderCleaning': 200,
     'crawler.pipelines.NewDynamoPipeline': 225,
     'crawler.pipelines.SectorSpiderFiltering': 250,
-    'crawler.pipelines.JobPostProcessingPipeline': 300,
     'crawler.pipelines.FetchGoogleDataPipeline': 400,
     'crawler.pipelines.CSVExportPipeline': 500,
 }

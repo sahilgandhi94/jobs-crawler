@@ -120,25 +120,6 @@ class NewDynamoPipeline(object):
             return item
 
 
-class JobPostProcessingPipeline(object):
-    def process_item(self, item, spider):
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
-            if isinstance(item, JobItem):
-                _pass = True
-
-                if self._contains(item['location'], 'bangalore') or self._contains(item['location'], 'delhi') or self._contains(item['location'], 'kolkata'):
-                    raise DropItem("Dropping item because location :" + item['location'])
-                    _pass = False
-
-                if self._contains(item['company_name'], 'manpower') or self._contains(item['company_name'], 'united capital club') or self._contains(item['company_name'], 'upc') or self._contains(item['company_name'], 'hiring for us based mnc') or self._contains(item['company_name'], 'consultants'):
-                    raise DropItem("Dropping item because comp name :" + item['company_name'])
-                    _pass = False
-
-                if _pass:
-                    return item
-        return item
-
-
 class SectorSpiderCleaning(object):
     def process_item(self, item, spider):
         if spider.name in ['sector', 'sector1']:
@@ -202,68 +183,6 @@ class SectorSpiderFiltering(object):
 
 class FetchGoogleDataPipeline(object):
     def process_item(self, item, spider):
-        # fetch company data from google
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine']:
-            if isinstance(item, JobItem):
-                print('==== fetch data from google ====')
-                payload = {
-                    'query': item['company_name']+' mumbai',
-                    'key': GOOGLE_PLACES_API_KEY
-                }
-
-                textsearch = requests.get(GOOGLE_TEXT_SEARCH_URL, params=payload)
-                if textsearch.status_code == 200 and textsearch.json()['status'] == 'OK':
-                    data = textsearch.json()['results'][0]
-                    item['place_id'] = data['place_id']
-                    print("place_id: " + data['place_id'])
-                    payload = {
-                        'placeid': item['place_id'],
-                        'key': GOOGLE_PLACES_API_KEY
-                    }
-                    print("payload: " + json.dumps(payload))
-                    detailsearch = requests.get(GOOGLE_DETAIL_SEARCH_URL, params=payload)
-                    if detailsearch.status_code == 200 and detailsearch.json()['status'] == 'OK':
-                        print('=== getting google detail data ===')
-                        data = detailsearch.json()['result']
-                        try:
-                            item['google_url'] = data['url']
-                        except KeyError:
-                            pass
-                        try:
-                            item['google_address'] = data['formatted_address']
-                        except KeyError:
-                            pass
-                        try:
-                            item['international_phone_number'] = data['international_phone_number']
-                        except KeyError:
-                            pass
-                        try:
-                            item['formatted_phone_number'] = data['formatted_phone_number']
-                        except KeyError:
-                            pass
-                        try:
-                            item['website'] = str(item['website']) + ", " + str(data['website'])
-                        except KeyError:
-                            pass
-                        try:
-                            item['latitude'] = data['geometry']['location']['lat']
-                        except KeyError:
-                            pass
-                        try:
-                            item['longitude'] = data['geometry']['location']['lng']
-                        except KeyError:
-                            pass
-                        try:
-                            for ac in data['address_components']:
-                                if 'sublocality_level_1' in ac['types']:
-                                    item['station'] = ac['long_name']
-                        except KeyError:
-                            pass
-                    else:
-                        print("Detail search failed: " + detailsearch.text.encode('utf-8'))
-                else:
-                    print("Text search failed: " + textsearch.text.encode('utf-8'))
-
         if spider.name in ['sector', 'sector1']:
             if isinstance(item, SectorItem):
                 if item['company_name'] is not None and len(item['company_name']) < 5:
@@ -315,7 +234,7 @@ class CSVExportPipeline(object):
         return pipeline
 
     def spider_opened(self, spider):
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
+        if spider.name in ['zaubacorp', 'sector', 'sector1']:
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
         else:
@@ -331,14 +250,14 @@ class CSVExportPipeline(object):
         file = self.files.pop(spider)
         filename = file.name
         file.close()
-        if spider.name in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
+        if spider.name in ['zaubacorp', 'sector', 'sector1']:
             self._send_email(filename)
         else:
             pass
             # self._send_candidate_email(filename)
 
     def process_item(self, item, spider):
-        if spider.name not in ['babajobs', 'naukri', 'indeed', 'shine', 'olx', 'olx_complete', 'zaubacorp', 'sector', 'sector1']:
+        if spider.name not in ['zaubacorp', 'sector', 'sector1']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
