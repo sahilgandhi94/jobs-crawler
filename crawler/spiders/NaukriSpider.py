@@ -8,94 +8,95 @@ class IndeedScrapy(scrapy.Spider):
     name = "naukri"
     allowed_domains=["naukri.com"]
     start_urls = [
-        "http://www.naukri.com/office-boy-jobs-in-thane",
-        "http://www.naukri.com/office-administrator-jobs-in-thane",
-        "http://www.naukri.com/receptionist-jobs-in-thane",
-        "http://www.naukri.com/data-entry-jobs-in-thane",
-        "http://www.naukri.com/computer-operator-jobs-in-thane",
-        "http://www.naukri.com/data-operator-jobs-in-thane",
-        "http://www.naukri.com/field-executive-jobs-in-thane",
-        "http://www.naukri.com/data-collection-jobs-in-thane",
-        "http://www.naukri.com/marketing-executive-jobs-in-thane",
-        "http://www.naukri.com/delivery-jobs-in-thane",
-        "http://www.naukri.com/courier-jobs-in-thane",
-        "http://www.naukri.com/delivery-executive-jobs-in-thane",
-        "http://www.naukri.com/delivery-boy-jobs-in-thane",
-
-        "http://www.naukri.com/office-boy-jobs-in-navi-mumbai",
-        "http://www.naukri.com/office-administrator-jobs-in-navi-mumbai",
-        "http://www.naukri.com/receptionist-jobs-in-navi-mumbai",
-        "http://www.naukri.com/data-entry-jobs-in-navi-mumbai",
-        "http://www.naukri.com/computer-operator-jobs-in-navi-mumbai",
-        "http://www.naukri.com/data-operator-jobs-in-navi-mumbai",
-        "http://www.naukri.com/field-executive-jobs-in-navi-mumbai",
-        "http://www.naukri.com/data-collection-jobs-in-navi-mumbai",
-        "http://www.naukri.com/marketing-executive-jobs-in-navi-mumbai",
-        "http://www.naukri.com/delivery-jobs-in-navi-mumbai",
-        "http://www.naukri.com/courier-jobs-in-navi-mumbai",
-        "http://www.naukri.com/delivery-executive-jobs-in-navi-mumbai",
-        "http://www.naukri.com/delivery-boy-jobs-in-navi-mumbai",
-
-        "http://www.naukri.com/office-boy-jobs-in-mumbai",
-        "http://www.naukri.com/office-administrator-jobs-in-mumbai",
-        "http://www.naukri.com/receptionist-jobs-in-mumbai",
-        "http://www.naukri.com/data-entry-jobs-in-mumbai",
-        "http://www.naukri.com/computer-operator-jobs-in-mumbai",
-        "http://www.naukri.com/data-operator-jobs-in-mumbai",
-        "http://www.naukri.com/field-executive-jobs-in-mumbai",
-        "http://www.naukri.com/data-collection-jobs-in-mumbai",
-        "http://www.naukri.com/marketing-executive-jobs-in-mumbai",
-        "http://www.naukri.com/delivery-jobs-in-mumbai",
-        "http://www.naukri.com/courier-jobs-in-mumbai",
-        "http://www.naukri.com/delivery-executive-jobs-in-mumbai",
-        "http://www.naukri.com/delivery-boy-jobs-in-mumbai",
-
-        "http://www.naukri.com/office-boy-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/office-administrator-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/receptionist-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/data-entry-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/computer-operator-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/data-operator-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/field-executive-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/data-collection-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/marketing-executive-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/delivery-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/courier-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/delivery-executive-jobs-in-mumbai-suburbs",
-        "http://www.naukri.com/delivery-boy-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/office-boy-jobs-in-thane",
+        # "http://www.naukri.com/office-administrator-jobs-in-thane",
+        # "http://www.naukri.com/receptionist-jobs-in-thane",
+        # "http://www.naukri.com/data-entry-jobs-in-thane",
+        # "http://www.naukri.com/computer-operator-jobs-in-thane",
+        # "http://www.naukri.com/data-operator-jobs-in-thane",
+        # "http://www.naukri.com/field-executive-jobs-in-thane",
+        # "http://www.naukri.com/data-collection-jobs-in-thane",
+        # "http://www.naukri.com/marketing-executive-jobs-in-thane",
+        # "http://www.naukri.com/delivery-jobs-in-thane",
+        # "http://www.naukri.com/courier-jobs-in-thane",
+        # "http://www.naukri.com/delivery-executive-jobs-in-thane",
+        # "http://www.naukri.com/delivery-boy-jobs-in-thane",
+        #
+        # "http://www.naukri.com/office-boy-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/office-administrator-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/receptionist-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/data-entry-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/computer-operator-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/data-operator-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/field-executive-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/data-collection-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/marketing-executive-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/delivery-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/courier-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/delivery-executive-jobs-in-navi-mumbai",
+        # "http://www.naukri.com/delivery-boy-jobs-in-navi-mumbai",
+        #
+        # "http://www.naukri.com/office-boy-jobs-in-mumbai",
+        # "http://www.naukri.com/office-administrator-jobs-in-mumbai",
+        # "http://www.naukri.com/receptionist-jobs-in-mumbai",
+        # "http://www.naukri.com/data-entry-jobs-in-mumbai",
+        # "http://www.naukri.com/computer-operator-jobs-in-mumbai",
+        # "http://www.naukri.com/data-operator-jobs-in-mumbai",
+        # "http://www.naukri.com/field-executive-jobs-in-mumbai",
+        # "http://www.naukri.com/data-collection-jobs-in-mumbai",
+        # "http://www.naukri.com/marketing-executive-jobs-in-mumbai",
+        # "http://www.naukri.com/delivery-jobs-in-mumbai",
+        # "http://www.naukri.com/courier-jobs-in-mumbai",
+        # "http://www.naukri.com/delivery-executive-jobs-in-mumbai",
+        # "http://www.naukri.com/delivery-boy-jobs-in-mumbai",
+        #
+        # "http://www.naukri.com/office-boy-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/office-administrator-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/receptionist-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/data-entry-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/computer-operator-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/data-operator-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/field-executive-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/data-collection-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/marketing-executive-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/delivery-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/courier-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/delivery-executive-jobs-in-mumbai-suburbs",
+        # "http://www.naukri.com/delivery-boy-jobs-in-mumbai-suburbs",
     ]
 
     def parse(self, response):
-        if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]/a/@href').extract_first() is not None:
-
-            for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
-                href = each.xpath('a/@href').extract_first()
-                posted_date_string = each.xpath('div[@class="other_details"]/div[@class="rec_details"]/span[@class="date"]/text()').extract_first()
-                url = response.urljoin(href)
-
-                if posted_date_string == "1 day ago":
-                    req = scrapy.Request(url, callback=self.parse_job_details)
-                    req.meta['url'] = url
-                    yield req
-
-            if response.xpath('//div[@class="pagination"]/a/@href').extract_first() is not None:
-                next = response.xpath('//div[@class="pagination"]/a/@href').extract()
-                if len(next) > 1 :
-                    next = response.urljoin(next[1])
-                else:
-                    next = response.urljoin(next[0])
-                paginate_req = scrapy.Request(next, callback=self.parse)
-                next_paginate_number = int(str(next[str(next).rfind('-')+1:]))
-                try:
-                    current_paginate_number = int(response.meta['current_paginate_number'])                    
-                except KeyError:
-                    # current page is first page of pagination
-                    current_paginate_number = 1
-                finally:
-                    if current_paginate_number > next_paginate_number:
-                        return
-                    paginate_req.meta['current_paginate_number'] = next_paginate_number
-                    yield paginate_req
+        pass
+        # if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]/a/@href').extract_first() is not None:
+        #
+        #     for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
+        #         href = each.xpath('a/@href').extract_first()
+        #         posted_date_string = each.xpath('div[@class="other_details"]/div[@class="rec_details"]/span[@class="date"]/text()').extract_first()
+        #         url = response.urljoin(href)
+        #
+        #         if posted_date_string == "1 day ago":
+        #             req = scrapy.Request(url, callback=self.parse_job_details)
+        #             req.meta['url'] = url
+        #             yield req
+        #
+        #     if response.xpath('//div[@class="pagination"]/a/@href').extract_first() is not None:
+        #         next = response.xpath('//div[@class="pagination"]/a/@href').extract()
+        #         if len(next) > 1 :
+        #             next = response.urljoin(next[1])
+        #         else:
+        #             next = response.urljoin(next[0])
+        #         paginate_req = scrapy.Request(next, callback=self.parse)
+        #         next_paginate_number = int(str(next[str(next).rfind('-')+1:]))
+        #         try:
+        #             current_paginate_number = int(response.meta['current_paginate_number'])
+        #         except KeyError:
+        #             # current page is first page of pagination
+        #             current_paginate_number = 1
+        #         finally:
+        #             if current_paginate_number > next_paginate_number:
+        #                 return
+        #             paginate_req.meta['current_paginate_number'] = next_paginate_number
+        #             yield paginate_req
 
 
     def parse_job_details(self, response):

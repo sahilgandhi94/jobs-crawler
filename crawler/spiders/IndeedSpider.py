@@ -12,53 +12,54 @@ class IndeedScrapy(scrapy.Spider):
     name = "indeed"
     allowed_domains=["indeed.co.in"]
     start_urls = [
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=back+office&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Thane&start=0',
-        'http://www.indeed.co.in/jobs?q=field+work&l=Thane&start=0',
-
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=back+office&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=field+work&l=Mumbai&start=0',
-
-        'http://www.indeed.co.in/jobs?q=office+boy&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=office+administrative&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=back+office&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=data+entry&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=computer+operator&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=data+operator&l=Navi+Mumbai&start=0',
-        'http://www.indeed.co.in/jobs?q=field+work&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=office+boy&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=office+administrative&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=back+office&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+entry&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=computer+operator&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+operator&l=Thane&start=0',
+        # 'http://www.indeed.co.in/jobs?q=field+work&l=Thane&start=0',
+        #
+        # 'http://www.indeed.co.in/jobs?q=office+boy&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=office+administrative&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=back+office&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+entry&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=computer+operator&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+operator&l=Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=field+work&l=Mumbai&start=0',
+        #
+        # 'http://www.indeed.co.in/jobs?q=office+boy&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=office+administrative&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=back+office&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+entry&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=computer+operator&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=data+operator&l=Navi+Mumbai&start=0',
+        # 'http://www.indeed.co.in/jobs?q=field+work&l=Navi+Mumbai&start=0',
     ]
 
 
     def parse(self, response):
-        if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]').extract_first() is not None:
-            
-            for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
-                if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="date"]/text()').extract_first() == '1 day ago':
-                    if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="result-link-source"]/text()').extract_first() is None:
-                        href = "http://www.indeed.co.in" + each.xpath('h2/a/@href').extract_first()
-                        url = response.urljoin(href)
-                        req = scrapy.Request(url, callback=self.parse_job_details)
-                        req.meta['url'] = url
-                        yield req
-
-          
-            for x in response.xpath('//div[@class="pagination"]/a'):
-                try:
-                    if "Next" in x.xpath('span/span/text()').extract_first():
-                        nextUrl = "http://www.indeed.co.in" + x.xpath('@href').extract_first()        
-                        paginate_req = scrapy.Request(nextUrl, callback=self.parse)
-                        yield paginate_req
-                except:
-                    continue
+        pass
+        # if response.xpath('//div[@itemtype="http://schema.org/JobPosting"]').extract_first() is not None:
+        #
+        #     for each in response.xpath('//div[@itemtype="http://schema.org/JobPosting"]'):
+        #         if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="date"]/text()').extract_first() == '1 day ago':
+        #             if each.xpath('table/tr/td/div[@class="result-link-bar-container"]/div[@class="result-link-bar"]/span[@class="result-link-source"]/text()').extract_first() is None:
+        #                 href = "http://www.indeed.co.in" + each.xpath('h2/a/@href').extract_first()
+        #                 url = response.urljoin(href)
+        #                 req = scrapy.Request(url, callback=self.parse_job_details)
+        #                 req.meta['url'] = url
+        #                 yield req
+        #
+        #
+        #     for x in response.xpath('//div[@class="pagination"]/a'):
+        #         try:
+        #             if "Next" in x.xpath('span/span/text()').extract_first():
+        #                 nextUrl = "http://www.indeed.co.in" + x.xpath('@href').extract_first()
+        #                 paginate_req = scrapy.Request(nextUrl, callback=self.parse)
+        #                 yield paginate_req
+        #         except:
+        #             continue
 
 
 

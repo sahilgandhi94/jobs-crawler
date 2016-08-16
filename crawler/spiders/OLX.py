@@ -6,67 +6,68 @@ class OLX(scrapy.Spider):
     name = "olx"
     allowed_domains = ["olx.in"]
     start_urls = [
-        'https://www.olx.in/mumbai/customer-service/?page=1',
-        # 'https://www.olx.in/mumbai/online-part-time/?page=1',
-        'https://www.olx.in/mumbai/marketing/?page=1',
-        'https://www.olx.in/mumbai/advertising-pr/?page=1',
-        'https://www.olx.in/mumbai/hotels-tourism/?page=1',
-        'https://www.olx.in/mumbai/human-resources/?page=1',
-        'https://www.olx.in/mumbai/clerical-administration/?page=1',
-        'https://www.olx.in/mumbai/sales/?page=1',
-        'https://www.olx.in/mumbai/manufacturing/?page=1',
-        'https://www.olx.in/mumbai/part-time/?page=1',
-        'https://www.olx.in/mumbai/other-jobs/?page=1',
-        'https://www.olx.in/mumbai/it/?page=1',
-        'https://www.olx.in/mumbai/education/?page=1',
-        'https://www.olx.in/mumbai/accounting-finance/?page=1',
+        # 'https://www.olx.in/mumbai/customer-service/?page=1',
+        # # 'https://www.olx.in/mumbai/online-part-time/?page=1',
+        # 'https://www.olx.in/mumbai/marketing/?page=1',
+        # 'https://www.olx.in/mumbai/advertising-pr/?page=1',
+        # 'https://www.olx.in/mumbai/hotels-tourism/?page=1',
+        # 'https://www.olx.in/mumbai/human-resources/?page=1',
+        # 'https://www.olx.in/mumbai/clerical-administration/?page=1',
+        # 'https://www.olx.in/mumbai/sales/?page=1',
+        # 'https://www.olx.in/mumbai/manufacturing/?page=1',
+        # 'https://www.olx.in/mumbai/part-time/?page=1',
+        # 'https://www.olx.in/mumbai/other-jobs/?page=1',
+        # 'https://www.olx.in/mumbai/it/?page=1',
+        # 'https://www.olx.in/mumbai/education/?page=1',
+        # 'https://www.olx.in/mumbai/accounting-finance/?page=1',
     ]
 
     def parse(self, response):
-        # promoted
-        for i in range(0, 50):
-            tbody = response.xpath(".//*[@id='promotedAd']/tbody")
-            href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
-            date = response.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
-            if len(href) > 0:
-                print(href)
-                href = self._rstrip(href)[0]
-                # date = self._rstrip(date)[0]
-                req = scrapy.Request(href, callback=self.parse_job_details)
-                req.meta['url'] = href
-                req.meta['premium'] = True
-                yield req
-
-        # normal
-        for i in range(0, 100):
-            tbody = response.xpath(".//*[@id='offers_table']/tbody")
-            href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
-            date = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
-            if len(href) > 0 and len(date) > 0:
-                href = self._rstrip(href)[0]
-                date = self._rstrip(date)[0]
-
-                if date.lower() == 'yesterday':
-                    req = scrapy.Request(href, callback=self.parse_job_details)
-                    req.meta['url'] = href
-                    yield req
-
-        base_url = response.url.split('?')[0]
-        try:
-            query_params = response.url.split('?')[1]
-            current_page = query_params.split('page=')[1]
-            next = int(current_page) + 1
-            if str(current_page) == str(response.meta.get('previous_page_number', '')):
-                return
-        except IndexError:
-            # first page
-            current_page = 1
-            next = 2
-        finally:
-            next_page = base_url + "?page=" + str(next)
-            req = scrapy.Request(next_page, callback=self.parse)
-            req.meta['previous_page_number'] = current_page
-            yield req
+        pass
+        # # promoted
+        # for i in range(0, 50):
+        #     tbody = response.xpath(".//*[@id='promotedAd']/tbody")
+        #     href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
+        #     date = response.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
+        #     if len(href) > 0:
+        #         print(href)
+        #         href = self._rstrip(href)[0]
+        #         # date = self._rstrip(date)[0]
+        #         req = scrapy.Request(href, callback=self.parse_job_details)
+        #         req.meta['url'] = href
+        #         req.meta['premium'] = True
+        #         yield req
+        #
+        # # normal
+        # for i in range(0, 100):
+        #     tbody = response.xpath(".//*[@id='offers_table']/tbody")
+        #     href = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[1]/td[2]/h3/a/@href").extract()
+        #     date = tbody.xpath("tr["+str(i)+"]/td/table/tbody/tr[2]/td[1]/p/text()").extract()
+        #     if len(href) > 0 and len(date) > 0:
+        #         href = self._rstrip(href)[0]
+        #         date = self._rstrip(date)[0]
+        #
+        #         if date.lower() == 'yesterday':
+        #             req = scrapy.Request(href, callback=self.parse_job_details)
+        #             req.meta['url'] = href
+        #             yield req
+        #
+        # base_url = response.url.split('?')[0]
+        # try:
+        #     query_params = response.url.split('?')[1]
+        #     current_page = query_params.split('page=')[1]
+        #     next = int(current_page) + 1
+        #     if str(current_page) == str(response.meta.get('previous_page_number', '')):
+        #         return
+        # except IndexError:
+        #     # first page
+        #     current_page = 1
+        #     next = 2
+        # finally:
+        #     next_page = base_url + "?page=" + str(next)
+        #     req = scrapy.Request(next_page, callback=self.parse)
+        #     req.meta['previous_page_number'] = current_page
+        #     yield req
 
     def parse_job_details(self, response):
 
