@@ -44,13 +44,6 @@ BACK_OFFICE = [
     "http://www.shine.com/job-search/simple/computer-operator/mumbai/",
     "http://www.shine.com/job-search/simple/office-admin/mumbai/",
     "http://www.shine.com/job-search/simple/receptionist/mumbai/",
-    "http://www.shine.com/job-search/simple/backoffice/mumbai/",
-    "http://www.shine.com/job-search/simple/backofficeexecutive/mumbai/",
-    "http://www.shine.com/job-search/simple/backofficeassistant/mumbai/",
-    "http://www.shine.com/job-search/simple/dataentry/mumbai/",
-    "http://www.shine.com/job-search/simple/computeroperator/mumbai/",
-    "http://www.shine.com/job-search/simple/officeadmin/mumbai/",
-    "http://www.shine.com/job-search/simple/receptionist/mumbai/",
 ]
 
 ACCOUNTS = [
@@ -112,12 +105,12 @@ OFFICE_BOY = [
     "http://www.naukri.com/officeboyassistant-jobs-in-mumbai",
 
     # ============== Olx ==============
-    "https://www.olx.in/mumbai/jobs/q-poen/",
-    "https://www.olx.in/mumbai/jobs/q-office-boy/",
-    "https://www.olx.in/mumbai/jobs/q-office-assistant/",
-    "https://www.olx.in/mumbai/jobs/q-helper/",
-    "https://www.olx.in/mumbai/jobs/q-officeboy/",
-    "https://www.olx.in/mumbai/jobs/q-officeassistant/",
+    # "https://www.olx.in/mumbai/jobs/q-poen/",
+    # "https://www.olx.in/mumbai/jobs/q-office-boy/",
+    # "https://www.olx.in/mumbai/jobs/q-office-assistant/",
+    # "https://www.olx.in/mumbai/jobs/q-helper/",
+    # "https://www.olx.in/mumbai/jobs/q-officeboy/",
+    # "https://www.olx.in/mumbai/jobs/q-officeassistant/",
 
     # ============== Shine ==============
     "http://www.shine.com/job-search/simple/poen/mumbai/",
@@ -249,6 +242,7 @@ class SectorSpider(scrapy.Spider):
             except:
                 pass
 
+        job['url'] = response.url
         job['role'] = self._join(job_posting.xpath('//span[@itemprop="skills"]/a/text()').extract(), delimeter=',')
         job['position'] = response.meta.get('position', '')
         job['portal'] = 'shine'
@@ -338,7 +332,7 @@ class SectorSpider(scrapy.Spider):
         location = self._join(location)
 
         job = SectorItem()
-        # job['url'] = response.meta['url']
+        job['url'] = response.url
         job['date'] = 'yesterday'
         job['title'] = job_title
         job['location'] = location
@@ -348,7 +342,6 @@ class SectorSpider(scrapy.Spider):
         job['number'] = phone_no
         job['portal'] = 'olx'
         job['position'] = response.meta.get('position', '')
-        # job['premium'] = response.meta.get('premium', '')
 
         yield job
 
@@ -407,7 +400,7 @@ class SectorSpider(scrapy.Spider):
 
         job = SectorItem()
         job_posting = response.xpath('//div[@itemtype="http://schema.org/JobPosting"]')[0]
-        # job['url'] = response.meta['url']
+        job['url'] = response.url
         job['title'] = self._join(job_posting.xpath('//h1[@itemprop="title"]/text()').extract())
         job['company_name'] = self._join(job_posting.xpath('//a[@itemprop="hiringOrganization"]/text()').extract())
 
