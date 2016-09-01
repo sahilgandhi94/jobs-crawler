@@ -1,7 +1,8 @@
 import scrapy
+from crawler.items import ZaubaItem
 
 
-class OLX(scrapy.Spider):
+class Zauba(scrapy.Spider):
     name = "zaubacorp"
     allowed_domains = ["zaubacorp.com"]
     start_urls = []
@@ -13,6 +14,7 @@ class OLX(scrapy.Spider):
         [self.start_urls.append(company_url.replace('__CIN__', cin)) for cin in cins]
 
     def parse(self, response):
+        data = ZaubaItem()
         rx = response.xpath
         cin = rx(".//*[@id='block-system-main']/div[2]/div[1]/div[1]/div[1]/table/thead/tr/td[2]/p/a/text()").extract_first()
         company_name = rx(".//*[@id='block-system-main']/div[2]/div[1]/div[1]/div[1]/table/tbody/tr[1]/td[2]/p/text()").extract_first()
@@ -35,17 +37,15 @@ class OLX(scrapy.Spider):
             pass
         directors = self._join(directors, ', ')
 
-        data = {
-            'CIN': self._encode(cin),
-            'Company Name': self._encode(company_name),
-            'RoC': self._encode(roc),
-            'Registration number': self._encode(registration_number),
-            'Date of incorporation': self._encode(date_of_incorporation),
-            'Email': self._encode(email),
-            'Website': self._encode(website.strip()),
-            'Address': self._encode(address),
-            'Directors': self._encode(directors)
-        }
+        data['CIN'] = self._encode(cin),
+        data['CompanyName'] = self._encode(company_name),
+        data['RoC'] = self._encode(roc),
+        data['RegistrationNumber'] = self._encode(registration_number),
+        data['DateofIncorporation'] = self._encode(date_of_incorporation),
+        data['Email'] = self._encode(email),
+        data['Website'] = self._encode(website.strip()),
+        data['Address'] = self._encode(address),
+        data['Directors'] = self._encode(directors)
         print(data)
         return data
 

@@ -126,6 +126,7 @@ class NewDynamoPipeline(object):
             except:
                 print("Suppressed error {}".format(traceback.format_exc()))
             return item
+        return item
 
 
 class SectorSpiderCleaning(object):
@@ -161,8 +162,8 @@ class SectorSpiderCleaning(object):
 
 class SectorSpiderFiltering(object):
     def process_item(self, item, spider):
+        drop = False
         if spider.name in ['sector', 'sector1']:
-            drop = False
             if isinstance(item, SectorItem):
                 def __contains(name, keyword): return name.lower().find(keyword.lower()) > -1
 

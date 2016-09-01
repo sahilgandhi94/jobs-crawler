@@ -105,12 +105,12 @@ OFFICE_BOY = [
     "http://www.naukri.com/officeboyassistant-jobs-in-mumbai",
 
     # ============== Olx ==============
-    # "https://www.olx.in/mumbai/jobs/q-poen/",
-    # "https://www.olx.in/mumbai/jobs/q-office-boy/",
-    # "https://www.olx.in/mumbai/jobs/q-office-assistant/",
-    # "https://www.olx.in/mumbai/jobs/q-helper/",
-    # "https://www.olx.in/mumbai/jobs/q-officeboy/",
-    # "https://www.olx.in/mumbai/jobs/q-officeassistant/",
+    "https://www.olx.in/mumbai/jobs/q-poen/",
+    "https://www.olx.in/mumbai/jobs/q-office-boy/",
+    "https://www.olx.in/mumbai/jobs/q-office-assistant/",
+    "https://www.olx.in/mumbai/jobs/q-helper/",
+    "https://www.olx.in/mumbai/jobs/q-officeboy/",
+    "https://www.olx.in/mumbai/jobs/q-officeassistant/",
 
     # ============== Shine ==============
     "http://www.shine.com/job-search/simple/poen/mumbai/",

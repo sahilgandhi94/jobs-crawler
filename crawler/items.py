@@ -65,3 +65,14 @@ class SectorItem(scrapy.Item):
     email = scrapy.Field()
     url = scrapy.Field()
 
+
+class ZaubaItem(scrapy.Item):
+    CIN = scrapy.Field()
+    CompanyName = scrapy.Field()
+    RoC = scrapy.Field()
+    RegistrationNumber = scrapy.Field()
+    DateofIncorporation = scrapy.Field()
+    Email = scrapy.Field()
+    Website = scrapy.Field()
+    Address = scrapy.Field()
+    Directors = scrapy.Field()
