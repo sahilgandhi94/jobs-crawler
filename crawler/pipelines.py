@@ -26,7 +26,7 @@ GOOGLE_DETAIL_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/details/j
 class DynamoDBStorePipeline(object):
 
     def process_item(self, item, spider):
-         if spider.name not in ['zaubacorp', 'sector', 'sector1', 'phoneandemail', 'exhaustive']:
+         if spider.name not in ['zaubacorp', 'sector', 'sector1', 'phoneandemail', 'companiesinmumbai', 'exhaustive']:
 
             dynamodb_session = Session(aws_access_key_id='AKIAJT6AN3A5WZEZ74WA',
                                        aws_secret_access_key='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',
@@ -256,7 +256,7 @@ class CSVExportPipeline(object):
         if spider.name in ['zaubacorp', 'sector', 'sector1', 'exhaustive']:
             filename = '%s-jobs-%s.csv' % (spider.name, datetime.utcnow().strftime('%d%m%Y%H%M%s'))
             path = os.path.expanduser("/tmp/jobs-data/%s" % filename)
-        elif spider.name == 'phoneandemail':
+        elif spider.name in ['phoneandemail', 'companiesinmumbai']:
             return
         else:
             filename = '%s_cand_%s.csv' % (spider.name, time.strftime("%d_%m_%Y"))
@@ -267,7 +267,7 @@ class CSVExportPipeline(object):
         self.exporter.start_exporting()
 
     def spider_closed(self, spider):
-        if spider.name == 'phoneandemail':
+        if spider.name in ['phoneandemail', 'companiesinmumbai']:
             return
         self.exporter.finish_exporting()
         file = self.files.pop(spider)
@@ -277,7 +277,7 @@ class CSVExportPipeline(object):
             self._send_email(filename)
 
     def process_item(self, item, spider):
-        if spider.name not in ['zaubacorp', 'sector', 'sector1', 'phoneandemail', 'exhaustive']:
+        if spider.name not in ['zaubacorp', 'sector', 'sector1', 'phoneandemail', 'companiesinmumbai', 'exhaustive']:
             src = " "
             for i in item['source']:
                 src = src + "," + i
